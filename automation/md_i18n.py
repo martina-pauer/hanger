@@ -57,13 +57,13 @@ if __name__ == '__main__':
 
     os.system(f'cd {root_folder}')
     
-    technical = Documents(f'{root_folder}/TECHNICAL_ROADMAP.md', 3, 98)
+    technical = Documents(f'{root_folder}/TECHNICAL_ROADMAP.md', 1, 97)
 
     roadmap = Documents(f'{root_folder}/ROADMAP.md', 1, 5)
 
-    readme = Documents(f'{root_folder}/README.md', 3, 44)
+    readme = Documents(f'{root_folder}/README.md', 3, 51)
 
-    agent = Documents(f'{root_folder}/AGENTS.md', 1, 40)
+    agent = Documents(f'{root_folder}/AGENTS.md', 1, 43)
 
     md_list: list[str] =   [technical, roadmap, readme, agent]
     # Get files in sub-folders (Only md)
