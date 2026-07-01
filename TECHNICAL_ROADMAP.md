@@ -95,5 +95,3 @@ Acceptance criteria:
 6. [x] Add interview notes and access controls.
 7. [ ] Add reporting commands and sanitized exports.
 8. [~] Document deployment, backup, restore, and operational workflows.
-
-## Spanish Summary
