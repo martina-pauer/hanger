@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+import asyncio
+from googletrans import Translator
 # Translate all the Markdown in the folder and sub-folders to language
 root_folder: str = '/workspaces/hanger/'
 md_list: list[str] = []
@@ -6,7 +8,18 @@ lang_codes: list[str] =     [
                                 'es', 'fr', 'de',
                                 'ja', 'zh', 'uk',
                                 'ru', 'it', 'pt'
+
                             ]
+
+async def GoogleTranslation(message: str, lang_code: str):
+    '''
+        Use Google Translator for translate the message
+        to selected language by international lang code
+    '''
+    async with Translator() as content:
+        translation = await content.translate(message, dest = lang_code)
+        return translation.text
+
 class Documents:
     '''
         Representation of reduced content from
@@ -30,9 +43,13 @@ class Documents:
             in file
         '''
         with open(self.doc_path, 'a') as translator:
+            # Make Translation
             translated: str = self.content.replace('[EN]', '')
+            translated: str = asyncio.run(GoogleTranslation(translated, code))
+            # Add Translation To File
             translator.write(f'# [{code}] {translated}')
             translator.close()
+            # Clean Memory
             del translated
 
 if __name__ == '__main__':
