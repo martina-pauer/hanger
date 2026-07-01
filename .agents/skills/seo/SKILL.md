@@ -3592,3 +3592,883 @@ X-Content-Type-Options: nosniff
   высота строки: 1,5;
 }
 ```
+---
+nome: seo
+descrizione: Ottimizza per la visibilità e il posizionamento sui motori di ricerca. Utilizzare quando viene richiesto di "migliorare il SEO", "ottimizzare per la ricerca", "correggere i meta tag", "aggiungere dati strutturati", "ottimizzazione della mappa del sito" o "ottimizzazione dei motori di ricerca".
+licenza: MIT
+metadati:
+  autore: competenze di qualità web
+  versione: "1.0"
+---
+
+#Ottimizzazione SEO
+
+Ottimizzazione per i motori di ricerca basata sugli audit SEO di Lighthouse e sulle linee guida di ricerca di Google. Concentrati sulla SEO tecnica, sull'ottimizzazione della pagina e sui dati strutturati.
+
+## Fondamenti SEO
+
+Fattori di ranking della ricerca (influenza approssimativa):
+
+| Fattore | Influenza | Questa abilità |
+|--------|-----------|----|
+| Qualità e pertinenza dei contenuti | ~40% | Parziale (struttura) |
+| Backlink e autorità | ~25% | ✗ |
+| SEO tecnico | ~15% | ✓ |
+| Esperienza sulla pagina (Core Web Vitals) | ~10% | Vedi [Core Web Vitals](../core-web-vitals/SKILL.md) |
+| SEO on-page | ~10% | ✓ |
+
+---
+
+## SEO tecnica
+
+### Scansione
+
+**robot.txt:**
+"testo".
+# /robot.txt
+Agente utente: *
+Consenti: /
+
+# Blocca aree amministrative/private
+Non consentire: /admin/
+Non consentire: /api/
+Non consentire: /privato/
+
+# Non bloccare le risorse necessarie per il rendering
+# ❌ Disallow: /statico/
+
+Mappa del sito: https://example.com/sitemap.xml
+```
+
+**Meta robot:**
+```html
+<!-- Predefinito: indicizzabile, seguibile -->
+<meta name="robots" content="index, follow">
+
+<!-- Pagine specifiche di Noindex -->
+<meta name="robots" content="noindex, nofollow">
+
+<!-- Indicizzabile ma non seguire i link -->
+<meta name="robots" content="index, nofollow">
+
+<!-- Snippet di controllo -->
+<meta name="robots" content="max-snippet:150, max-image-preview:large">
+```
+
+**URL canonici:**
+```html
+<!-- Previeni problemi relativi ai contenuti duplicati -->
+<link rel="canonical" href="https://example.com/page">
+
+<!-- Canonica autoreferenziale (consigliata) -->
+<link rel="canonical" href="https://example.com/current-page">
+
+<!-- Per contenuti impaginati -->
+<link rel="canonical" href="https://example.com/products">
+<!-- Oppure usa rel="prev" / rel="next" per l'impaginazione esplicita -->
+```
+
+### Mappa del sito XML
+
+```xml
+<?xml versione="1.0" codifica="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://esempio.com/</loc>
+    <lastmod>15-01-2024</lastmod>
+    <changefreq>giornaliero</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://esempio.com/prodotti</loc>
+    <lastmod>14-01-2024</lastmod>
+    <changefreq>settimanale</changefreq>
+    <priorità>0.8</priority>
+  </url>
+</urlset>
+```
+
+**Best practice per la mappa del sito:**
+- Massimo 50.000 URL o 50 MB per mappa del sito
+- Utilizza l'indice della mappa del sito per i siti più grandi
+- Includere solo URL canonici e indicizzabili
+- Aggiorna `lastmod` quando il contenuto cambia
+- Invia a Google Search Console
+
+### Struttura dell'URL
+
+```
+✅ Buoni URL:
+https://example.com/products/blue-widget
+https://example.com/blog/how-to-use-widgets
+
+❌ URL scadenti:
+https://example.com/p?id=12345
+https://example.com/products/item/category/subcategory/blue-widget-2024-sale-discount
+```
+
+**Linee guida URL:**
+- Utilizzare i trattini, non i caratteri di sottolineatura
+- Solo minuscolo
+- Mantienilo breve (< 75 caratteri)
+- Includi parole chiave target in modo naturale
+- Evitare i parametri quando possibile
+- Utilizza sempre HTTPS
+
+### HTTPS e sicurezza
+
+```html
+<!-- Assicurati che tutte le risorse utilizzino HTTPS -->
+<img src="https://example.com/immagine.jpg">
+
+<!-- Non: -->
+<img src="http://example.com/immagine.jpg">
+```
+
+**Intestazioni di sicurezza per segnali di fiducia SEO:**
+```
+Sicurezza di trasporto rigorosa: età massima = 31536000; includeSottodomini
+Opzioni tipo contenuto X: nosniff
+Opzioni X-Frame: NEGA
+```
+
+---
+
+## SEO on-page
+
+### Tag del titolo
+
+```html
+<!-- ❌ Mancante o generico -->
+<title>Pagina</title>
+<title>Casa</title>
+
+<!-- ✅ Descrittivo con parola chiave primaria -->
+<title>Widget blu in vendita | Qualità Premium | Negozio di esempio</title>
+```
+
+**Linee guida sui tag del titolo:**
+- 50-60 caratteri (Google tronca ~60)
+- Parola chiave principale vicino all'inizio
+- Unico per ogni pagina
+- Nome del marchio alla fine (a meno che non sia la home page)
+- Orientato all'azione quando appropriato
+
+### Meta descrizioni
+
+```html
+<!-- ❌ Mancante o duplicato -->
+<meta nome="descrizione" contenuto="">
+
+<!-- ✅ Avvincente e unico -->
+<meta name="description" content="Acquista widget blu premium con spedizione gratuita. Resi entro 30 giorni. Valutato 4,9/5 da oltre 10.000 clienti. Ordina oggi e risparmia il 20%.">
+```
+
+**Linee guida per la meta descrizione:**
+- 150-160 caratteri
+- Includi la parola chiave principale in modo naturale
+- Invito all'azione convincente
+- Unico per ogni pagina
+- Corrisponde al contenuto della pagina
+
+### Struttura dell'intestazione
+
+```html
+<!-- ❌Struttura pessima -->
+<h2>Benvenuti nel nostro negozio</h2>
+<h4>Prodotti</h4>
+<h1>Contattaci</h1>
+
+<!-- ✅ Gerarchia corretta -->
+<h1>Widget blu: qualità premium</h1>
+  <h2>Caratteristiche del prodotto</h2>
+    <h3>Durabilità</h3>
+    <h3>Progettazione</h3>
+  <h2>Recensioni dei clienti</h2>
+  <h2>Prezzi</h2>
+```
+
+**Linee guida per le intestazioni:**
+- Singolo `<h1>` per pagina (l'argomento principale)
+- Gerarchia logica (non saltare i livelli)
+- Includi parole chiave in modo naturale
+- Descrittivo, non generico
+
+### SEO delle immagini
+
+```html
+<!-- ❌ SEO dell'immagine scadente -->
+<img src="IMG_12345.jpg">
+
+<!-- ✅ Immagine ottimizzata -->
+<img src="blue-widget-prodotto-foto.webp"
+     alt="Widget blu con finitura cromata, vista laterale che mostra il pannello di controllo"
+     larghezza="800"
+     altezza="600"
+     caricamento="pigro">
+```
+
+**Linee guida per le immagini:**
+- Nomi di file descrittivi con parole chiave
+- Il testo alternativo descrive il contenuto dell'immagine
+- Compresso e di dimensioni adeguate
+- WebP/AVIF con fallback
+- Caricamento lento delle immagini sotto la piega
+
+### Collegamento interno
+
+```html
+<!-- ❌ Non descrittivo -->
+<a href="/products">Fai clic qui</a>
+<a href="/widgets">Ulteriori informazioni</a>
+
+<!-- ✅ Testo di ancoraggio descrittivo -->
+<a href="/products/blue-widgets">Sfoglia la nostra raccolta di widget blu</a>
+<a href="/guides/widget-maintenance">Scopri come mantenere i tuoi widget</a>
+```
+
+**Linee guida per il collegamento:**
+- Testo di ancoraggio descrittivo con parole chiave
+- Collegamento alle pagine interne pertinenti
+- Numero ragionevole di collegamenti per pagina
+- Risolvi tempestivamente i collegamenti interrotti
+- Usa il breadcrumb per la gerarchia
+
+---
+
+## Dati strutturati (JSON-LD)
+
+### Organizzazione
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organizzazione",
+  "nome": "Azienda di esempio",
+  "url": "https://esempio.com",
+  "logo": "https://example.com/logo.png",
+  "uguale a": [
+    "https://twitter.com/esempio",
+    "https://linkedin.com/azienda/esempio"
+  ],
+  "punto di contatto": {
+    "@type": "ContactPoint",
+    "telefono": "+1-555-123-4567",
+    "contactType": "servizio clienti"
+  }
+}
+</script>
+```
+
+###Articolo
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Articolo",
+  "headline": "Come scegliere il widget giusto",
+  "description": "Guida completa per selezionare i widget per le tue esigenze.",
+  "immagine": "https://example.com/articolo-immagine.jpg",
+  "autore": {
+    "@type": "Persona",
+    "nome": "Jane Smith",
+    "url": "https://example.com/authors/jane-smith"
+  },
+  "editore": {
+    "@type": "Organizzazione",
+    "name": "Blog di esempio",
+    "logo": {
+      "@type": "OggettoImmagine",
+      "url": "https://example.com/logo.png"
+    }
+  },
+  "dataPubblicazione": "2024-01-15",
+  "dateModified": "2024-01-20"
+}
+</script>
+```
+
+### Prodotto
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Prodotto",
+  "nome": "Blue Widget Pro",
+  "immagine": "https://example.com/blue-widget.jpg",
+  "description": "Widget blu premium con funzionalità avanzate.",
+  "marca": {
+    "@type": "Marca",
+    "nome": "WidgetCo"
+  },
+  "offerte": {
+    "@type": "Offerta",
+    "prezzo": "49,99",
+    "priceCurrency": "USD",
+    "disponibilità": "https://schema.org/InStock",
+    "url": "https://example.com/products/blue-widget"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "1250"
+  }
+}
+</script>
+```
+
+### Domande frequenti
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "PaginaFAQ",
+  "entitàprincipale": [
+    {
+      "@type": "Domanda",
+      "name": "Quali colori sono disponibili?",
+      "risposta accettata": {
+        "@type": "Rispondi",
+        "text": "I nostri widget sono disponibili in blu, rosso e verde."
+      }
+    },
+    {
+      "@type": "Domanda",
+      "name": "Qual è la garanzia?",
+      "risposta accettata": {
+        "@type": "Rispondi",
+        "text": "Tutti i widget includono una garanzia di 2 anni."
+      }
+    }
+  ]
+}
+</script>
+```
+
+### Pangrattato
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Lista breadcrumb",
+  "ElementoListaArticoli": [
+    {
+      "@type": "ElementoLista",
+      "posizione": 1,
+      "nome": "Casa",
+      "elemento": "https://example.com"
+    },
+    {
+      "@type": "ElementoLista",
+      "posizione": 2,
+      "nome": "Prodotti",
+      "articolo": "https://example.com/prodotti"
+    },
+    {
+      "@type": "ElementoLista",
+      "posizione": 3,
+      "nome": "Widget blu",
+      "item": "https://example.com/products/blue-widgets"
+    }
+  ]
+}
+</script>
+```
+
+### Convalida
+
+Testare i dati strutturati su:
+- [Test dei risultati avanzati di Google](https://search.google.com/test/rich-results)
+- [Convalidatore di Schema.org](https://validator.schema.org/)
+
+---
+
+## SEO mobile
+
+### Design reattivo
+
+```html
+<!-- ❌ Non ottimizzato per i dispositivi mobili -->
+<meta name="viewport" content="width=1024">
+
+<!-- ✅ Visualizzazione reattiva -->
+<meta name="viewport" content="width=larghezza-dispositivo, scala-iniziale=1">
+```
+
+### Tocca i target
+
+```css
+/* ❌ Troppo piccolo per i dispositivi mobili */
+.piccolo collegamento {
+  imbottitura: 4px;
+  dimensione carattere: 12px;
+}
+
+/* ✅ Target di tocco adeguato */
+.link ottimizzato per dispositivi mobili {
+  imbottitura: 12px;
+  dimensione carattere: 16px;
+  altezza minima: 48px;
+  larghezza minima: 48px;
+}
+```
+
+### Dimensioni dei caratteri
+
+```css
+/* ❌ Troppo piccolo sul cellulare */
+corpo {
+  dimensione carattere: 10px;
+}
+
+/* ✅ Leggibile senza zoom */
+corpo {
+  dimensione carattere: 16px;
+  altezza della linea: 1,5;
+}
+```
+---
+nome: seo
+descrição: Otimize para visibilidade e classificação em mecanismos de pesquisa. Use quando solicitado a "melhorar SEO", "otimizar para pesquisa", "corrigir meta tags", "adicionar dados estruturados", "otimização de mapa de site" ou "otimização de mecanismo de pesquisa".
+licença: MIT
+metadados:
+  autor: habilidades de qualidade na web
+  versão: "1.0"
+---
+
+# Otimização SEO
+
+Otimização de mecanismos de pesquisa com base nas auditorias Lighthouse SEO e nas diretrizes da Pesquisa Google. Concentre-se em SEO técnico, otimização on-page e dados estruturados.
+
+## Fundamentos de SEO
+
+Fatores de classificação de pesquisa (influência aproximada):
+
+| Fator | Influência | Esta habilidade |
+|--------|-----------|-----------|
+| Qualidade e relevância do conteúdo | ~40% | Parcial (estrutura) |
+| Backlinks e autoridade | ~25% | ✗ |
+| SEO técnico | ~15% | ✓ |
+| Experiência de página (Core Web Vitals) | ~10% | Consulte [Core Web Vitals](../core-web-vitals/SKILL.md) |
+| SEO na página | ~10% | ✓ |
+
+---
+
+## SEO Técnico
+
+### Rastreabilidade
+
+**robôs.txt:**
+```texto
+# /robôs.txt
+Agente do usuário: *
+Permitir: /
+
+# Bloquear áreas administrativas/privadas
+Proibir: /admin/
+Não permitir: /api/
+Proibir: /privado/
+
+# Não bloqueie recursos necessários para renderização
+# ❌ Proibir: /static/
+
+Mapa do site: https://example.com/sitemap.xml
+```
+
+**Meta-robôs:**
+```html
+<!-- Padrão: indexável, seguivel -->
+<meta name="robôs" content="index, follow">
+
+<!-- Páginas específicas do Noindex -->
+<meta name="robôs" content="noindex, nofollow">
+
+<!-- Indexável, mas não segue links -->
+<meta name="robôs" content="index, nofollow">
+
+<!-- Trechos de controle -->
+<meta name="robots" content="max-snippet:150, max-image-preview:large">
+```
+
+**URLs canônicos:**
+```html
+<!-- Evite problemas de conteúdo duplicado -->
+<link rel="canonical" href="https://example.com/page">
+
+<!-- Auto-referência canônica (recomendado) -->
+<link rel="canonical" href="https://example.com/current-page">
+
+<!-- Para conteúdo paginado -->
+<link rel="canonical" href="https://example.com/products">
+<!-- Ou use rel="prev" / rel="next" para paginação explícita -->
+```
+
+### Mapa do site XML
+
+```xml
+<?xml versão="1.0" codificação="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <URL>
+    <loc>https://example.com/</loc>
+    <lastmod>15/01/2024</lastmod>
+    <changefreq>diariamente</changefreq>
+    <prioridade>1.0</prioridade>
+  </url>
+  <URL>
+    <loc>https://example.com/products</loc>
+    <lastmod>14/01/2024</lastmod>
+    <changefreq>semanalmente</changefreq>
+    <prioridade>0,8</prioridade>
+  </url>
+</urlset>
+```
+
+**Práticas recomendadas para mapas de site:**
+- Máximo de 50.000 URLs ou 50 MB por sitemap
+- Use o índice do mapa do site para sites maiores
+- Incluir apenas URLs canônicos e indexáveis
+- Atualize `lastmod` quando o conteúdo mudar
+- Enviar para o Google Search Console
+
+### Estrutura de URL
+
+```
+✅ Bons URLs:
+https://example.com/products/blue-widget
+https://example.com/blog/how-to-use-widgets
+
+❌ URLs ruins:
+https://example.com/p?id=12345
+https://example.com/products/item/category/subcategory/blue-widget-2024-sale-discount
+```
+
+**Diretrizes de URL:**
+- Use hífens, não sublinhados
+- Somente letras minúsculas
+- Seja breve (<75 caracteres)
+- Incluir palavras-chave alvo naturalmente
+- Evite parâmetros quando possível
+- Use HTTPS sempre
+
+### HTTPS e segurança
+
+```html
+<!-- Certifique-se de que todos os recursos usem HTTPS -->
+<img src="https://example.com/image.jpg">
+
+<!-- Não: -->
+<img src="http://example.com/image.jpg">
+```
+
+**Cabeçalhos de segurança para sinais de confiança de SEO:**
+```
+Segurança de transporte estrita: idade máxima = 31536000; incluirSubDomínios
+Opções de tipo de conteúdo X: nosniff
+Opções de quadro X: NEGAR
+```
+
+---
+
+## SEO na página
+
+### Tags de título
+
+```html
+<!-- ❌ Ausente ou genérico -->
+<título>Página</título>
+<title>Página inicial</title>
+
+<!-- ✅ Descritivo com palavra-chave primária -->
+<title>Widgets azuis à venda | Qualidade Premium | Exemplo de loja</title>
+```
+
+**Diretrizes para tags de título:**
+- 50-60 caracteres (o Google trunca aproximadamente 60)
+- Palavra-chave primária perto do início
+- Único para cada página
+- Nome da marca no final (exceto na página inicial)
+- Orientado para a ação quando apropriado
+
+### Meta descrições
+
+```html
+<!-- ❌ Ausente ou duplicado -->
+<meta name="descrição" content="">
+
+<!-- ✅ Atraente e único -->
+<meta name="description" content="Compre widgets azuis premium com frete grátis. Devoluções em 30 dias. Classificação 4,9/5 por mais de 10.000 clientes. Faça seu pedido hoje e economize 20%.">
+```
+
+**Diretrizes para meta descrição:**
+- 150-160 caracteres
+- Incluir palavra-chave primária naturalmente
+- Chamada para ação atraente
+- Único para cada página
+- Corresponde ao conteúdo da página
+
+### Estrutura do título
+
+```html
+<!-- ❌ Estrutura ruim -->
+<h2>Bem-vindo à nossa loja</h2>
+<h4>Produtos</h4>
+<h1>Entre em contato conosco</h1>
+
+<!-- ✅ Hierarquia adequada -->
+<h1>Widgets azuis - qualidade premium</h1>
+  <h2>Recursos do produto</h2>
+    <h3>Durabilidade</h3>
+    <h3>Projeto</h3>
+  <h2>Avaliações de clientes</h2>
+  <h2>Preços</h2>
+```
+
+**Diretrizes de título:**
+- Único `<h1>` por página (o tópico principal)
+- Hierarquia lógica (não pule níveis)
+- Incluir palavras-chave naturalmente
+- Descritivo, não genérico
+
+### SEO de imagem
+
+```html
+<!-- ❌ SEO de imagem ruim -->
+<img src="IMG_12345.jpg">
+
+<!-- ✅ Imagem otimizada -->
+<img src="blue-widget-product-photo.webp"
+     alt="Widget azul com acabamento cromado, vista lateral mostrando o painel de controle"
+     largura = "800"
+     altura = "600"
+     carregando="preguiçoso">
+```
+
+**Diretrizes de imagem:**
+- Nomes de arquivos descritivos com palavras-chave
+- O texto alternativo descreve o conteúdo da imagem
+- Compactado e dimensionado adequadamente
+- WebP/AVIF com substitutos
+- Carregamento lento de imagens abaixo da dobra
+
+### Link interno
+
+```html
+<!-- ❌ Não descritivo -->
+<a href="/products">Clique aqui</a>
+<a href="/widgets">Leia mais</a>
+
+<!-- ✅ Texto âncora descritivo -->
+<a href="/products/blue-widgets">Navegue em nossa coleção de widgets azuis</a>
+<a href="/guides/widget-maintenance">Aprenda como manter seus widgets</a>
+```
+
+**Diretrizes de vinculação:**
+- Texto âncora descritivo com palavras-chave
+- Link para páginas internas relevantes
+- Número razoável de links por página
+- Corrija links quebrados imediatamente
+- Use breadcrumbs para hierarquia
+
+---
+
+## Dados estruturados (JSON-LD)
+
+### Organização
+
+```html
+<script type="application/ld+json">
+{
+  "@contexto": "https://schema.org",
+  "@type": "Organização",
+  "nome": "Empresa Exemplo",
+  "url": "https://example.com",
+  "logotipo": "https://example.com/logo.png",
+  "mesmos": [
+    "https://twitter.com/example",
+    "https://linkedin.com/company/example"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telefone": "+1-555-123-4567",
+    "contactType": "atendimento ao cliente"
+  }
+}
+</script>
+```
+
+### Artigo
+
+```html
+<script type="application/ld+json">
+{
+  "@contexto": "https://schema.org",
+  "@type": "Artigo",
+  "headline": "Como escolher o widget certo",
+  "description": "Guia completo para selecionar widgets de acordo com suas necessidades.",
+  "imagem": "https://example.com/article-image.jpg",
+  "autor": {
+    "@type": "Pessoa",
+    "nome": "Jane Smith",
+    "url": "https://example.com/authors/jane-smith"
+  },
+  "editor": {
+    "@type": "Organização",
+    "nome": "Exemplo de blog",
+    "logotipo": {
+      "@type": "ImageObject",
+      "url": "https://example.com/logo.png"
+    }
+  },
+  "data de publicação": "15/01/2024",
+  "dataModificada": "2024-01-20"
+}
+</script>
+```
+
+### Produto
+
+```html
+<script type="application/ld+json">
+{
+  "@contexto": "https://schema.org",
+  "@type": "Produto",
+  "nome": "Blue Widget Pro",
+  "imagem": "https://example.com/blue-widget.jpg",
+  "description": "Widget azul premium com recursos avançados.",
+  "marca": {
+    "@type": "Marca",
+    "nome": "WidgetCo"
+  },
+  "ofertas": {
+    "@type": "Oferta",
+    "preço": "49,99",
+    "preçoMoeda": "USD",
+    "disponibilidade": "https://schema.org/InStock",
+    "url": "https://example.com/products/blue-widget"
+  },
+  "agregaçãoRating": {
+    "@type": "AgregaçãoRating",
+    "avaliaçãoValor": "4,8",
+    "reviewCount": "1250"
+  }
+}
+</script>
+```
+
+### Perguntas frequentes
+
+```html
+<script type="application/ld+json">
+{
+  "@contexto": "https://schema.org",
+  "@type": "FAQPágina",
+  "entidade principal": [
+    {
+      "@type": "Pergunta",
+      "nome": "Quais cores estão disponíveis?",
+      "aceitaResposta": {
+        "@type": "Responder",
+        "text": "Nossos widgets vêm em azul, vermelho e verde."
+      }
+    },
+    {
+      "@type": "Pergunta",
+      "nome": "Qual é a garantia?",
+      "aceitaResposta": {
+        "@type": "Responder",
+        "text": "Todos os widgets incluem garantia de 2 anos."
+      }
+    }
+  ]
+}
+</script>
+```
+
+### Pão ralado
+
+```html
+<script type="application/ld+json">
+{
+  "@contexto": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "posição": 1,
+      "nome": "Casa",
+      "item": "https://example.com"
+    },
+    {
+      "@type": "ListItem",
+      "posição": 2,
+      "nome": "Produtos",
+      "item": "https://example.com/products"
+    },
+    {
+      "@type": "ListItem",
+      "posição": 3,
+      "nome": "Widgets Azuis",
+      "item": "https://example.com/products/blue-widgets"
+    }
+  ]
+}
+</script>
+```
+
+### Validação
+
+Teste dados estruturados em:
+- [Teste de pesquisa aprimorada do Google](https://search.google.com/test/rich-results)
+- [Validador Schema.org](https://validator.schema.org/)
+
+---
+
+## SEO móvel
+
+### Design responsivo
+
+```html
+<!-- ❌ Não compatível com dispositivos móveis -->
+<meta name="viewport" content="width=1024">
+
+<!-- ✅ Janela de visualização responsiva -->
+<meta name="viewport" content="largura=largura do dispositivo, escala inicial=1">
+```
+
+### Toque nos alvos
+
+```css
+/* ❌ Muito pequeno para celular */
+.link pequeno {
+  preenchimento: 4px;
+  tamanho da fonte: 12px;
+}
+
+/* ✅ Alvo de toque adequado */
+.link compatível com dispositivos móveis {
+  preenchimento: 12px;
+  tamanho da fonte: 16px;
+  altura mínima: 48px;
+  largura mínima: 48px;
+}
+```
+
+### Tamanhos de fonte
+
+```css
+/* ❌ Muito pequeno no celular */
+corpo {
+  tamanho da fonte: 10px;
+}
+
+/* ✅ Legível sem zoom */
+corpo {
+  tamanho da fonte: 16px;
+  altura da linha: 1,5;
+}
+```

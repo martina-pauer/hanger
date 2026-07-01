@@ -1453,3 +1453,391 @@ Akzeptanzkriterien:
 6. [x] Добавьте записи интервью и элементы управления доступом.
 7. [ ] Добавьте команды отчетности и очищенный экспорт.
 8. [~] Документирование рабочих процессов развертывания, резервного копирования, восстановления и эксплуатации.
+# Roadmap tecnica
+
+Questa tabella di marcia converte le note del prodotto corrente in "ROADMAP.md" in lavoro di ingegneria implementabile per "hanger_app". Si concentra sui prossimi traguardi di backend, sicurezza, operazioni e documentazione.
+
+## 1. Onboarding utente controllato
+
+Obiettivo: registrare solo gli utenti che superano un processo di selezione.
+
+Ambito di implementazione:
+
+- [x] Aggiungere un flusso di lavoro dell'applicazione con gli stati: "inviato", "screening", "intervista", "accettato", "rifiutato" e "invitato".
+- [x] Memorizza le risposte alle domande, le note del revisore, i timestamp delle decisioni e gli ID utente del revisore.
+- [x] Sostituisci la registrazione aperta con la registrazione solo su invito legata alle candidature accettate.
+- [x] Aggiungi percorsi amministrativi e comandi CLI per rivedere, accettare, rifiutare e invitare i candidati.
+  Vengono implementati i comandi CLI e i percorsi delle applicazioni di amministrazione protette.
+- [x] Aggiungi eventi di controllo per ogni modifica dello stato dell'applicazione.
+  L'accettazione, il rifiuto, l'invito, la pianificazione dell'intervista, il completamento dell'intervista e la creazione delle note vengono controllati a livello di servizio.
+
+Criteri di accettazione:
+
+- [x] Un utente non invitato non può creare un account.
+- [x] I candidati ammessi ricevono un invito monouso.
+- [x] I test riguardano domande duplicate, domande rifiutate, inviti scaduti e decisioni riservate all'amministratore.
+
+## 2. Requisiti per installazione
+
+Obiettivo: supportare diverse regole di idoneità e limiti operativi per ciascun server distribuito.
+
+Ambito di implementazione:
+
+- [x] Introdurre una tabella "installation_settings" per le regole di onboarding, i criteri di ammissibilità, i limiti e il branding.
+- [x] Sposta i valori specifici del server dal codice sorgente alle variabili di ambiente o alle impostazioni supportate dal database.
+- [x] Convalida le impostazioni di produzione richieste durante l'avvio dell'applicazione.
+- [x] Aggiungi un'interfaccia utente o una CLI di amministrazione per leggere e aggiornare le impostazioni sicure.
+  Il supporto CLI è implementato con `settings-list`, `settings-get` e `settings-set`.
+- [~] Documentare la configurazione richiesta in "README.md" ed esempi di distribuzione.
+  I comandi `README.md` e contributor vengono aggiornati; restano in sospeso esempi di implementazione più ricchi.
+
+Criteri di accettazione:
+
+- [x] Ogni distribuzione può definire le proprie regole di ammissibilità senza modifiche al codice.
+- [x] La configurazione di produzione mancante fallisce rapidamente con un errore chiaro.
+- [x] I test verificano le impostazioni predefinite, le sostituzioni e la configurazione non valida.
+
+## 3. Interviste e pipeline di ricerca
+
+Obiettivo: gestire le interviste con possibili futuri utenti e convertire la ricerca in segnali di prodotto utilizzabili.
+
+Ambito di implementazione:
+
+- [x] Aggiungi i campi di pianificazione del colloquio del candidato: metodo di contatto, orari preferiti, intervistatore assegnato e stato.
+- [x] Aggiungi note al colloquio con categorie strutturate: motivazione, idoneità, rischi e azioni di follow-up.
+- [x] Aggiungi controlli sulla privacy in modo che solo gli amministratori o gli intervistatori assegnati possano leggere le note dell'intervista.
+- [x] Aggiungi esportazioni aggregate per le metriche di ricerca senza esporre note sensibili.
+
+Criteri di accettazione:
+
+- [x] Gli appunti del colloquio sono controllati e controllati dall'accesso.
+- [x] Gli amministratori possono elencare i candidati in base allo stato del colloquio.
+- [x] Le esportazioni di ricerca escludono per impostazione predefinita le note private di testo libero.
+
+## 4. Preparazione dei finanziamenti e delle operazioni
+
+Obiettivo: preparare il progetto per finanziamenti esterni, sponsorizzazioni o collaborazioni strutturate.
+
+Ambito di implementazione:
+
+- [ ] Aggiungi metriche operative: utenti registrati, utenti attivi, applicazioni per stato, conversione di inviti e stato dei messaggi/lavori.
+- [ ] Aggiungi dashboard sulla salute o report CLI utilizzando le basi esistenti `/health/live` e `/health/ready`.
+- [ ] Migliorare la registrazione di autenticazione, onboarding, processi in background e decisioni di accesso al caricamento.
+- [ ] Aggiungi criteri di conservazione dei dati per applicazioni, note di intervista e token di ripristino.
+- [ ] Aggiungere la documentazione di backup e ripristino per le distribuzioni SQLite.
+
+Criteri di accettazione:
+
+- [] I manutentori possono generare un report sull'utilizzo pronto per il finanziamento senza l'ispezione diretta del database.
+- [ ] I dati utente sensibili sono esclusi dalle esportazioni pubbliche o rivolte agli sponsor.
+- [ ] Le fasi di backup e ripristino sono documentate e testate rispetto a un database locale.
+
+## Priorità ingegneristiche trasversali
+
+- Sicurezza: preserva la semantica del token monouso di invito, il controllo degli accessi basato sui ruoli, i registri di controllo e l'autorizzazione al caricamento.
+- Test: mantenere la copertura al di sopra della soglia CI e aggiungere test di percorso/servizio per ogni percorso decisionale di onboarding.
+- Migrazioni: aggiungi modifiche allo schema solo tramite file numerati in `src/hanger_app/migrations/`; non riscrivere mai le migrazioni applicate.
+- Documentazione: aggiorna `AGENTS.md`, `README.md` e le note di distribuzione ogni volta che cambiano comandi, configurazione o flussi di lavoro.
+- Osservabilità: preferire log strutturati e controlli espliciti sullo stato rispetto agli errori silenziosi.
+
+## Ordine di implementazione suggerito
+
+1. [x] Aggiungere lo schema dell'applicazione e dell'invito.
+2. [x] Implementare il repository e il livello di servizio per le decisioni sulle applicazioni.
+3. [x] Aggiungi comandi CLI di amministrazione e percorsi di amministrazione protetti.
+4. [x] Disabilita la registrazione aperta quando è abilitata la modalità solo su invito.
+5. [x] Aggiungere le impostazioni di installazione e la convalida della produzione.
+6. [x] Aggiungi note sull'intervista e controlli di accesso.
+7. [ ] Aggiungere comandi di reporting ed esportazioni disinfettate.
+8. [~] Documentare la distribuzione, il backup, il ripristino e i flussi di lavoro operativi.
+# Roadmap tecnica
+
+Questa tabella di marcia converte le note del prodotto corrente in "ROADMAP.md" in lavoro di ingegneria implementabile per "hanger_app". Si concentra sui prossimi traguardi di backend, sicurezza, operazioni e documentazione.
+
+## 1. Onboarding utente controllato
+
+Obiettivo: registrare solo gli utenti che superano un processo di selezione.
+
+Ambito di implementazione:
+
+- [x] Aggiungere un flusso di lavoro dell'applicazione con gli stati: "inviato", "screening", "intervista", "accettato", "rifiutato" e "invitato".
+- [x] Memorizza le risposte alle domande, le note del revisore, i timestamp delle decisioni e gli ID utente del revisore.
+- [x] Sostituisci la registrazione aperta con la registrazione solo su invito legata alle candidature accettate.
+- [x] Aggiungi percorsi amministrativi e comandi CLI per rivedere, accettare, rifiutare e invitare i candidati.
+  Vengono implementati i comandi CLI e i percorsi delle applicazioni di amministrazione protette.
+- [x] Aggiungi eventi di controllo per ogni modifica dello stato dell'applicazione.
+  L'accettazione, il rifiuto, l'invito, la pianificazione dell'intervista, il completamento dell'intervista e la creazione delle note vengono controllati a livello di servizio.
+
+Criteri di accettazione:
+
+- [x] Un utente non invitato non può creare un account.
+- [x] I candidati ammessi ricevono un invito monouso.
+- [x] I test riguardano domande duplicate, domande rifiutate, inviti scaduti e decisioni riservate all'amministratore.
+
+## 2. Requisiti per installazione
+
+Obiettivo: supportare diverse regole di idoneità e limiti operativi per ciascun server distribuito.
+
+Ambito di implementazione:
+
+- [x] Introdurre una tabella "installation_settings" per le regole di onboarding, i criteri di ammissibilità, i limiti e il branding.
+- [x] Sposta i valori specifici del server dal codice sorgente alle variabili di ambiente o alle impostazioni supportate dal database.
+- [x] Convalida le impostazioni di produzione richieste durante l'avvio dell'applicazione.
+- [x] Aggiungi un'interfaccia utente o una CLI di amministrazione per leggere e aggiornare le impostazioni sicure.
+  Il supporto CLI è implementato con `settings-list`, `settings-get` e `settings-set`.
+- [~] Documentare la configurazione richiesta in "README.md" ed esempi di distribuzione.
+  I comandi `README.md` e contributor vengono aggiornati; restano in sospeso esempi di implementazione più ricchi.
+
+Criteri di accettazione:
+
+- [x] Ogni distribuzione può definire le proprie regole di ammissibilità senza modifiche al codice.
+- [x] La configurazione di produzione mancante fallisce rapidamente con un errore chiaro.
+- [x] I test verificano le impostazioni predefinite, le sostituzioni e la configurazione non valida.
+
+## 3. Interviste e pipeline di ricerca
+
+Obiettivo: gestire le interviste con possibili futuri utenti e convertire la ricerca in segnali di prodotto utilizzabili.
+
+Ambito di implementazione:
+
+- [x] Aggiungi i campi di pianificazione del colloquio del candidato: metodo di contatto, orari preferiti, intervistatore assegnato e stato.
+- [x] Aggiungi note al colloquio con categorie strutturate: motivazione, idoneità, rischi e azioni di follow-up.
+- [x] Aggiungi controlli sulla privacy in modo che solo gli amministratori o gli intervistatori assegnati possano leggere le note dell'intervista.
+- [x] Aggiungi esportazioni aggregate per le metriche di ricerca senza esporre note sensibili.
+
+Criteri di accettazione:
+
+- [x] Gli appunti del colloquio sono controllati e controllati dall'accesso.
+- [x] Gli amministratori possono elencare i candidati in base allo stato del colloquio.
+- [x] Le esportazioni di ricerca escludono per impostazione predefinita le note private di testo libero.
+
+## 4. Preparazione dei finanziamenti e delle operazioni
+
+Obiettivo: preparare il progetto per finanziamenti esterni, sponsorizzazioni o collaborazioni strutturate.
+
+Ambito di implementazione:
+
+- [ ] Aggiungi metriche operative: utenti registrati, utenti attivi, applicazioni per stato, conversione di inviti e stato dei messaggi/lavori.
+- [ ] Aggiungi dashboard sulla salute o report CLI utilizzando le basi esistenti `/health/live` e `/health/ready`.
+- [ ] Migliorare la registrazione di autenticazione, onboarding, processi in background e decisioni di accesso al caricamento.
+- [ ] Aggiungi criteri di conservazione dei dati per applicazioni, note di intervista e token di ripristino.
+- [ ] Aggiungere la documentazione di backup e ripristino per le distribuzioni SQLite.
+
+Criteri di accettazione:
+
+- [] I manutentori possono generare un report sull'utilizzo pronto per il finanziamento senza l'ispezione diretta del database.
+- [ ] I dati utente sensibili sono esclusi dalle esportazioni pubbliche o rivolte agli sponsor.
+- [ ] Le fasi di backup e ripristino sono documentate e testate rispetto a un database locale.
+
+## Priorità ingegneristiche trasversali
+
+- Sicurezza: preserva la semantica del token monouso di invito, il controllo degli accessi basato sui ruoli, i registri di controllo e l'autorizzazione al caricamento.
+- Test: mantenere la copertura al di sopra della soglia CI e aggiungere test di percorso/servizio per ogni percorso decisionale di onboarding.
+- Migrazioni: aggiungi modifiche allo schema solo tramite file numerati in `src/hanger_app/migrations/`; non riscrivere mai le migrazioni applicate.
+- Documentazione: aggiorna `AGENTS.md`, `README.md` e le note di distribuzione ogni volta che cambiano comandi, configurazione o flussi di lavoro.
+- Osservabilità: preferire log strutturati e controlli espliciti sullo stato rispetto agli errori silenziosi.
+
+## Ordine di implementazione suggerito
+
+1. [x] Aggiungere lo schema dell'applicazione e dell'invito.
+2. [x] Implementare il repository e il livello di servizio per le decisioni sulle applicazioni.
+3. [x] Aggiungi comandi CLI di amministrazione e percorsi di amministrazione protetti.
+4. [x] Disabilita la registrazione aperta quando è abilitata la modalità solo su invito.
+5. [x] Aggiungere le impostazioni di installazione e la convalida della produzione.
+6. [x] Aggiungi note sull'intervista e controlli di accesso.
+7. [ ] Aggiungere comandi di reporting ed esportazioni disinfettate.
+8. [~] Documentare la distribuzione, il backup, il ripristino e i flussi di lavoro operativi.
+# Roteiro Técnico
+
+Este roteiro converte as notas do produto atuais em `ROADMAP.md` em trabalho de engenharia implementável para `hanger_app`. Ele se concentra nos próximos marcos de back-end, segurança, operações e documentação.
+
+## 1. Integração de usuário controlada
+
+Objetivo: cadastrar apenas usuários aprovados em processo seletivo.
+
+Escopo de implementação:
+
+- [x] Adicione um fluxo de trabalho de aplicativo com estados: `enviado`, `triagem`, `entrevista`, `aceito`, `rejeitado` e `convidado`.
+- [x] Armazene respostas de aplicativos, notas de revisores, carimbos de data/hora de decisão e IDs de usuário de revisores.
+- [x] Substituir o registro aberto pelo registro somente por convite vinculado às inscrições aceitas.
+- [x] Adicione rotas administrativas e comandos CLI para revisar, aceitar, rejeitar e convidar candidatos.
+  Comandos CLI e rotas de aplicativos administrativos protegidos são implementados.
+- [x] Adicione eventos de auditoria para cada mudança de estado do aplicativo.
+  Aceitar, rejeitar, convidar, agendar entrevistas, concluir entrevistas e criar notas são auditados na camada de serviço.
+
+Critérios de aceitação:
+
+- [x] Um usuário não convidado não pode criar uma conta.
+- [x] Os candidatos aceitos recebem um convite de uso único.
+- [x] Os testes cobrem inscrições duplicadas, inscrições rejeitadas, convites expirados e decisões apenas do administrador.
+
+## 2. Requisitos por instalação
+
+Objetivo: oferecer suporte a diferentes regras de elegibilidade e limites operacionais para cada servidor implantado.
+
+Escopo de implementação:
+
+- [x] Introduzir uma tabela `installation_settings` para regras de integração, critérios de elegibilidade, limites e marca.
+- [x] Mova valores específicos do servidor do código-fonte para variáveis ​​de ambiente ou configurações baseadas em banco de dados.
+- [x] Valide as configurações de produção necessárias durante a inicialização do aplicativo.
+- [x] Adicione uma UI de administrador ou CLI para ler e atualizar configurações seguras.
+  O suporte CLI é implementado com `settings-list`, `settings-get` e `settings-set`.
+- [~] Documente a configuração necessária em `README.md` e exemplos de implantação.
+  `README.md` e os comandos do contribuidor são atualizados; exemplos de implantação mais avançados permanecem pendentes.
+
+Critérios de aceitação:
+
+- [x] Cada implantação pode definir suas próprias regras de elegibilidade sem alterações de código.
+- [x] A configuração de produção ausente falha rapidamente com um erro claro.
+- [x] Os testes verificam configurações padrão, substituições e configurações inválidas.
+
+## 3. Entrevista e pipeline de pesquisa
+
+Objetivo: gerenciar entrevistas com possíveis futuros usuários e converter pesquisas em sinais de produtos acionáveis.
+
+Escopo de implementação:
+
+- [x] Adicionar campos de agendamento de entrevistas com candidatos: método de contato, horários preferenciais, entrevistador designado e status.
+- [x] Adicione notas de entrevista com categorias estruturadas: motivação, adequação, riscos e ações de acompanhamento.
+- [x] Adicione controles de privacidade para que apenas administradores ou entrevistadores designados possam ler as notas da entrevista.
+- [x] Adicione exportações agregadas para métricas de pesquisa sem expor notas confidenciais.
+
+Critérios de aceitação:
+
+- [x] As notas da entrevista são controladas por acesso e auditadas.
+- [x] Os administradores podem listar os candidatos por status de entrevista.
+- [x] As exportações de pesquisa excluem notas privadas de texto livre por padrão.
+
+## 4. Preparação para financiamento e operações
+
+Objetivo: preparar o projeto para financiamento externo, patrocínio ou colaboração estruturada.
+
+Escopo de implementação:
+
+- [ ] Adicionar métricas operacionais: usuários registrados, usuários ativos, inscrições por status, conversão de convites e integridade de mensagens/trabalhos.
+- [ ] Adicione painéis de saúde ou relatórios CLI usando as bases `/health/live` e `/health/ready` existentes.
+- [ ] Melhore o registro de autenticação, integração, trabalhos em segundo plano e decisões de acesso de upload.
+- [] Adicione políticas de retenção de dados para aplicativos, notas de entrevista e tokens de recuperação.
+- [] Adicionar documentação de backup e restauração para implantações SQLite.
+
+Critérios de aceitação:
+
+- [] Os mantenedores podem gerar um relatório de uso pronto para financiamento sem inspeção direta do banco de dados.
+- [ ] Os dados confidenciais do usuário são excluídos das exportações públicas ou voltadas para patrocinadores.
+- [ ] As etapas de backup e restauração são documentadas e testadas em um banco de dados local.
+
+## Prioridades transversais de engenharia
+
+- Segurança: preserve a semântica de uso único do token de convite, controle de acesso baseado em função, registros de auditoria e autorização de upload.
+- Testes: mantenha a cobertura acima do limite de CI e adicione testes de rota/serviço para cada caminho de decisão de integração.
+- Migrações: adicione alterações de esquema apenas através de arquivos numerados em `src/hanger_app/migrations/`; nunca reescreva as migrações aplicadas.
+- Documentação: atualize `AGENTS.md`, `README.md` e notas de implantação sempre que comandos, configurações ou fluxos de trabalho mudam.
+- Observabilidade: prefira logs estruturados e verificações de integridade explícitas a falhas silenciosas.
+
+## Ordem de implementação sugerida
+
+1. [x] Adicionar esquema de aplicativo e convite.
+2. [x] Implementar repositório e camada de serviço para decisões de aplicativos.
+3. [x] Adicione comandos CLI de administrador e rotas administrativas protegidas.
+4. [x] Desative o registro aberto quando o modo somente para convidados estiver ativado.
+5. [x] Adicione configurações de instalação e validação de produção.
+6. [x] Adicione notas de entrevista e controles de acesso.
+7. [] Adicione comandos de relatório e exportações higienizadas.
+8. [~] Documente a implantação, backup, restauração e fluxos de trabalho operacionais.
+# Roteiro Técnico
+
+Este roteiro converte as notas do produto atuais em `ROADMAP.md` em trabalho de engenharia implementável para `hanger_app`. Ele se concentra nos próximos marcos de back-end, segurança, operações e documentação.
+
+## 1. Integração de usuário controlada
+
+Objetivo: cadastrar apenas usuários aprovados em processo seletivo.
+
+Escopo de implementação:
+
+- [x] Adicione um fluxo de trabalho de aplicativo com estados: `enviado`, `triagem`, `entrevista`, `aceito`, `rejeitado` e `convidado`.
+- [x] Armazene respostas de aplicativos, notas de revisores, carimbos de data/hora de decisão e IDs de usuário de revisores.
+- [x] Substituir o registro aberto pelo registro somente por convite vinculado às inscrições aceitas.
+- [x] Adicione rotas administrativas e comandos CLI para revisar, aceitar, rejeitar e convidar candidatos.
+  Comandos CLI e rotas de aplicativos administrativos protegidos são implementados.
+- [x] Adicione eventos de auditoria para cada mudança de estado do aplicativo.
+  Aceitar, rejeitar, convidar, agendar entrevistas, concluir entrevistas e criar notas são auditados na camada de serviço.
+
+Critérios de aceitação:
+
+- [x] Um usuário não convidado não pode criar uma conta.
+- [x] Os candidatos aceitos recebem um convite de uso único.
+- [x] Os testes cobrem inscrições duplicadas, inscrições rejeitadas, convites expirados e decisões apenas do administrador.
+
+## 2. Requisitos por instalação
+
+Objetivo: oferecer suporte a diferentes regras de elegibilidade e limites operacionais para cada servidor implantado.
+
+Escopo de implementação:
+
+- [x] Introduzir uma tabela `installation_settings` para regras de integração, critérios de elegibilidade, limites e marca.
+- [x] Mova valores específicos do servidor do código-fonte para variáveis ​​de ambiente ou configurações baseadas em banco de dados.
+- [x] Valide as configurações de produção necessárias durante a inicialização do aplicativo.
+- [x] Adicione uma UI de administrador ou CLI para ler e atualizar configurações seguras.
+  O suporte CLI é implementado com `settings-list`, `settings-get` e `settings-set`.
+- [~] Documente a configuração necessária em `README.md` e exemplos de implantação.
+  `README.md` e os comandos do contribuidor são atualizados; exemplos de implantação mais avançados permanecem pendentes.
+
+Critérios de aceitação:
+
+- [x] Cada implantação pode definir suas próprias regras de elegibilidade sem alterações de código.
+- [x] A configuração de produção ausente falha rapidamente com um erro claro.
+- [x] Os testes verificam configurações padrão, substituições e configurações inválidas.
+
+## 3. Entrevista e pipeline de pesquisa
+
+Objetivo: gerenciar entrevistas com possíveis futuros usuários e converter pesquisas em sinais de produtos acionáveis.
+
+Escopo de implementação:
+
+- [x] Adicionar campos de agendamento de entrevistas com candidatos: método de contato, horários preferenciais, entrevistador designado e status.
+- [x] Adicione notas de entrevista com categorias estruturadas: motivação, adequação, riscos e ações de acompanhamento.
+- [x] Adicione controles de privacidade para que apenas administradores ou entrevistadores designados possam ler as notas da entrevista.
+- [x] Adicione exportações agregadas para métricas de pesquisa sem expor notas confidenciais.
+
+Critérios de aceitação:
+
+- [x] As notas da entrevista são controladas por acesso e auditadas.
+- [x] Os administradores podem listar os candidatos por status de entrevista.
+- [x] As exportações de pesquisa excluem notas privadas de texto livre por padrão.
+
+## 4. Preparação para financiamento e operações
+
+Objetivo: preparar o projeto para financiamento externo, patrocínio ou colaboração estruturada.
+
+Escopo de implementação:
+
+- [ ] Adicionar métricas operacionais: usuários registrados, usuários ativos, inscrições por status, conversão de convites e integridade de mensagens/trabalhos.
+- [ ] Adicione painéis de saúde ou relatórios CLI usando as bases `/health/live` e `/health/ready` existentes.
+- [ ] Melhore o registro de autenticação, integração, trabalhos em segundo plano e decisões de acesso de upload.
+- [] Adicione políticas de retenção de dados para aplicativos, notas de entrevista e tokens de recuperação.
+- [] Adicionar documentação de backup e restauração para implantações SQLite.
+
+Critérios de aceitação:
+
+- [] Os mantenedores podem gerar um relatório de uso pronto para financiamento sem inspeção direta do banco de dados.
+- [ ] Os dados confidenciais do usuário são excluídos das exportações públicas ou voltadas para patrocinadores.
+- [ ] As etapas de backup e restauração são documentadas e testadas em um banco de dados local.
+
+## Prioridades transversais de engenharia
+
+- Segurança: preserve a semântica de uso único do token de convite, controle de acesso baseado em função, registros de auditoria e autorização de upload.
+- Testes: mantenha a cobertura acima do limite de CI e adicione testes de rota/serviço para cada caminho de decisão de integração.
+- Migrações: adicione alterações de esquema apenas através de arquivos numerados em `src/hanger_app/migrations/`; nunca reescreva as migrações aplicadas.
+- Documentação: atualize `AGENTS.md`, `README.md` e notas de implantação sempre que comandos, configurações ou fluxos de trabalho mudam.
+- Observabilidade: prefira logs estruturados e verificações de integridade explícitas a falhas silenciosas.
+
+## Ordem de implementação sugerida
+
+1. [x] Adicionar esquema de aplicativo e convite.
+2. [x] Implementar repositório e camada de serviço para decisões de aplicativos.
+3. [x] Adicione comandos CLI de administrador e rotas administrativas protegidas.
+4. [x] Desative o registro aberto quando o modo somente para convidados estiver ativado.
+5. [x] Adicione configurações de instalação e validação de produção.
+6. [x] Adicione notas de entrevista e controles de acesso.
+7. [] Adicione comandos de relatório e exportações higienizadas.
+8. [~] Documente a implantação, backup, restauração e fluxos de trabalho operacionais.

@@ -1336,3 +1336,576 @@
 - [Рекомендація WCAG 2.2 W3C](https://www.w3.org/TR/WCAG22/)
 - [Короткий довідник WCAG 2.2](https://www.w3.org/WAI/WCAG22/quickref/)
 - [Що нового в WCAG 2.2](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/)
+# WCAG 2.2 Краткий справочник
+
+## Критерии успеха по уровням
+
+### Уровень А (минимум)
+
+| Критерий | Описание |
+|-----------|-------------|
+| **1.1.1** Нетекстовый контент | Все изображения и значки имеют альтернативный текст |
+| **1.2.1** Только аудио/только видео | Предоставьте расшифровку или аудиоописание |
+| **1.2.2** Подписи | Видео со звуком имеет субтитры |
+| **1.2.3** Аудиоописание | Видео имеет аудиоописание |
+| **1.3.1** Информация и отношения | Информация, передаваемая посредством презентации, доступна программно |
+| **1.3.2** Значимая последовательность | Порядок чтения логичен |
+| **1.3.3** Сенсорные характеристики | Инструкции не зависят исключительно от формы, цвета, размера, местоположения, ориентации или звука |
+| **1.4.1** Использование цвета | Цвет – не единственное визуальное средство передачи информации |
+| **1.4.2** Управление звуком | Автоматическое воспроизведение звука можно приостановить/остановить |
+| **2.1.1** Клавиатура | Все функции доступны через клавиатуру |
+| **2.1.2** Нет ловушки клавиатуры | Фокус клавиатуры можно переместить с любого компонента |
+| **2.1.4** Сочетания клавиш символов | Сочетания клавиш можно отключить или переназначить |
+| **2.2.1** Регулируемая синхронизация | Сроки могут быть продлены |
+| **2.2.2** Пауза, Стоп, Скрыть | Перемещение/мигание контента можно приостановить |
+| **2.3.1** Три мигания | Ничто не мигает чаще 3 раз в секунду |
+| **2.4.1** Обходные блоки | Пропустить ссылку или доступна навигация по ориентирам |
+| **2.4.2** Страница с названием | Страницы имеют описательные заголовки |
+| **2.4.3** Порядок фокусировки | Порядок фокуса сохраняет смысл |
+| **2.4.4** Цель ссылки | Цель ссылки ясна из текста или контекста ссылки |
+| **2.5.1** Жесты указателя | У многоточечных жестов есть альтернативы с одним указателем |
+| **2.5.2** Отмена указателя | Событие «вниз» не запускает действие (используйте событие «вверх» или щелкните мышью) |
+| **2.5.3** Метка в имени | Доступное имя содержит видимый текст метки |
+| **2.5.4** Активация движения | У функций, запускаемых движением, есть альтернативы |
+| **3.1.1** Язык страницы | Язык по умолчанию указан в HTML |
+| **3.2.1** В фокусе | Фокус не вызывает неожиданных изменений |
+| **3.2.2** При вводе | Ввод не вызывает неожиданных изменений |
+| **3.2.6** Постоянная справка | Механизмы помощи отображаются на страницах в одинаковом относительном порядке |
+| **3.3.1** Идентификация ошибок | Ошибки ввода четко описаны |
+| **3.3.2** Этикетки или инструкции | Входные данные формы имеют метки или инструкции |
+| **3.3.7** Дублирующая запись | Ранее введенная информация заполняется автоматически или доступна для выбора |
+| **4.1.2** Имя, роль, значение | Компоненты пользовательского интерфейса имеют доступные имена и правильные роли |
+
+### Уровень AA (стандартный)
+
+| Критерий | Описание |
+|-----------|-------------|
+| **1.2.4** Субтитры (в реальном времени) | Живой звук имеет субтитры |
+| **1.2.5** Аудиоописание | Предварительно записанное видео имеет аудиоописание |
+| **1.3.4** Ориентация | Содержание не ограничивает ориентацию |
+| **1.3.5** Определить назначение ввода | Цель ввода может быть определена программно |
+| **1.4.3** Контраст (минимум) | 4,5:1 для обычного текста, 3:1 для крупного текста |
+| **1.4.4** Изменение размера текста | Размер текста можно изменить до 200% без потери функциональности |
+| **1.4.5** Изображения текста | Вместо изображений текста используется текст |
+| **1.4.10** Перекомпоновка | Содержимое перерисовывается при ширине 320 пикселей без горизонтальной прокрутки |
+| **1.4.11** Нетекстовый контраст | Компоненты пользовательского интерфейса имеют контрастность 3:1 |
+| **1.4.12** Расстояние между текстами | Контент адаптируется к изменениям межтекстового интервала |
+| **1.4.13** Содержимое при наведении/фокусе | Дополнительный контент можно игнорировать, зависать, сохраняться |
+| **2.4.5** Несколько способов | Несколько способов поиска страниц |
+| **2.4.6** Заголовки и метки | Заголовки и метки носят описательный характер |
+| **2.4.7** Фокус видимый | Виден индикатор фокуса |
+| **2.4.11** Фокус не скрыт (минимум) | Выделенный элемент не полностью скрыт авторским контентом |
+| **2.5.7** Перетаскивание движений | У действий перетаскивания есть альтернативы с одним указателем |
+| **2.5.8** Целевой размер (минимум) | Интерактивные цели имеют размер не менее 24×24 CSS-пикселей (с исключениями) |
+| **3.1.2** Язык частей | Языковые изменения отмечены |
+| **3.2.3** Согласованная навигация | Навигация единообразна на всех страницах |
+| **3.2.4** Согласованная идентификация | Та же функциональность использует те же метки |
+| **3.3.3** Предложение об ошибке | Исправления ошибок, предлагаемые, если они известны |
+| **3.3.4** Предотвращение ошибок (юридическая информация) | Действия можно отменить или подтвердить |
+| **3.3.8** Доступная аутентификация (минимум) | Тест когнитивных функций для входа в систему невозможен, если не предоставлена ​​альтернатива или помощь |
+| **4.1.3** Сообщения о состоянии | Сообщения о состоянии, объявляемые программам чтения с экрана |
+
+### Уровень AAA (улучшенный)
+
+| Критерий | Описание |
+|-----------|-------------|
+| **1.4.6** Контраст (повышенный) | 7:1 для обычного текста, 4,5:1 для крупного текста |
+| **1.4.8** Визуальная презентация | Можно выбрать цвета переднего плана/фона |
+| **1.4.9** Изображения текста (без исключений) | Нет изображений текста |
+| **2.1.3** Клавиатура (без исключений) | Доступны все функциональные возможности клавиатуры |
+| **2.2.3** Нет времени | Нет ограничений по времени |
+| **2.2.4** Перебои | Перебои можно отложить |
+| **2.2.5** Повторная аутентификация | Данные сохраняются при повторной аутентификации |
+| **2.2.6** Тайм-ауты | Пользователей предупредили о потере данных из-за бездействия |
+| **2.3.2** Три мигания | Никакой контент не мигает более 3 раз |
+| **2.3.3** Анимация из взаимодействий | Анимацию движения можно отключить |
+| **2.4.8** Местоположение | Доступно местоположение пользователя на сайте |
+| **2.4.9** Цель ссылки (только ссылка) | Цель ссылки ясна только из текста ссылки |
+| **2.4.10** Заголовки разделов | Разделы имеют заголовки |
+| **2.4.12** Фокус не скрыт (улучшенный) | Никакая часть элемента, находящегося в фокусе, не скрыта созданным автором контентом |
+| **2.4.13** Внешний вид фокуса | Индикатор фокусировки имеет достаточную площадь, контрастность и не затеняется |
+| **3.1.3** Необычные слова | Доступны определения необычных слов |
+| **3.1.4** Сокращения | Расширение сокращений |
+| **3.1.5** Уровень чтения | Альтернативный контент для сложного текста |
+| **3.1.6** Произношение | Произношение доступно там, где необходимо |
+| **3.2.5** Изменение по запросу | Изменения, инициированные только пользователем |
+| **3.3.5** Справка | Доступна контекстно-зависимая справка |
+| **3.3.6** Предотвращение ошибок (все) | Все отправленные формы можно просмотреть |
+| **3.3.9** Доступная аутентификация (расширенная) | Нет проверки когнитивных функций при входе в систему (нет исключений для распознавания объектов или личного контента) |
+
+## Общие шаблоны ARIA
+
+### Кнопки
+```html
+<button>Метка</button>
+<!-- или -->
+<button aria-label="Закрыть диалог">×</button>
+```
+
+### Ссылки
+```html
+<a href="/page">Описательный текст ссылки</a>
+<!-- Внешние ссылки -->
+<a href="https://external.com" target="_blank" rel="noopener">
+  Внешний сайт
+  <span class="visually-hidden">(откроется в новой вкладке)</span>
+</а>
+```
+
+### Поля формы
+```html
+<label for="email">Адрес электронной почты</label>
+<input type="email" id="email" aria-describedby="email-hint">
+<p id="email-hint">Мы никогда не передадим ваш адрес электронной почты.</p>
+```
+
+### Состояния ошибок
+```html
+<label for="email">Электронная почта</label>
+<input type="email" id="email" aria-invalid="true" aria-describedby="email-error">
+<p id="email-error" role="alert">Введите действительный адрес электронной почты.</p>
+```
+
+### Навигация
+```html
+<nav aria-label="Основной">
+  <ул>
+    <li><a href="/" aria-current="page">Главная</a></li>
+    <li><a href="/about">О программе</a></li>
+  </ul>
+</нав>
+```
+
+### Модальные окна
+```html
+<div role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+  <h2 id="dialog-title">Подтвердить действие</h2>
+  <!-- содержимое -->
+</div>
+```
+
+### Живые регионы
+```html
+<!-- Вежливо (ждёт паузы в речи) -->
+<div aria-live="polite">Обновление статуса здесь</div>
+
+<!-- Настойчиво (сразу прерывает) -->
+<div aria-live="assertive" role="alert">Здесь сообщение об ошибке</div>
+
+<!-- Статус (вежливый, неявный) -->
+<div role="status">Загрузка завершена</div>
+```
+
+## Что изменилось с версии 2.1 на 2.2
+
+| Изменить | Критерий | Уровень |
+|--------|-----------|-------|
+| **Удалено** | 4.1.1 Анализ | А |
+| **Добавлено** | 2.4.11 Фокус не скрыт (минимум) | АА |
+| **Добавлено** | 2.4.12 Фокус не скрыт (улучшенный) | ААА |
+| **Добавлено** | 2.4.13 Внешний вид фокуса | ААА |
+| **Добавлено** | 2.5.7 Перетаскивание | АА |
+| **Добавлено** | 2.5.8 Целевой размер (минимальный) | АА |
+| **Добавлено** | 3.2.6 Постоянная справка | А |
+| **Добавлено** | 3.3.7 Дублирующий ввод | А |
+| **Добавлено** | 3.3.8 Доступная аутентификация (минимум) | АА |
+| **Добавлено** | 3.3.9 Доступная аутентификация (расширенная) | ААА |
+
+## Инструменты тестирования
+
+| Инструмент | Тип | URL-адрес |
+|------|------|-----|
+| топор DevTools | Расширение для браузера | [deque.com/axe](https://www.deque.com/axe/) |
+| ВОЛНА | Расширение для браузера | [wave.webaim.org](https://wave.webaim.org/) |
+| Маяк | Встроено в Chrome | Инструменты разработчика → Маяк |
+| НВДА | Программа чтения с экрана (Windows) | [nvaccess.org](https://www.nvaccess.org/) |
+| Голос за кадром | Программа чтения с экрана (Mac) | Встроено в macOS |
+| Анализатор цветового контраста | Настольное приложение | [tpgi.com](https://www.tpgi.com/color-contrast-checker/) |
+
+## Источники
+
+- [Рекомендация WCAG 2.2 W3C] (https://www.w3.org/TR/WCAG22/)
+- [Краткий справочник WCAG 2.2] (https://www.w3.org/WAI/WCAG22/quickref/)
+- [Что нового в WCAG 2.2] (https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/)
+# WCAG 2.2 Guida rapida
+
+## Criteri di successo per livello
+
+### Livello A (minimo)
+
+| Criterio | Descrizione |
+|-----------|-------------|
+| **1.1.1** Contenuti non testuali | Tutte le immagini e le icone hanno alternative di testo |
+| **1.2.1** Solo audio/Solo video | Fornire la trascrizione o la descrizione audio |
+| **1.2.2** Didascalie | Il video con audio ha didascalie |
+| **1.2.3** Descrizione audio | Il video ha una descrizione audio |
+| **1.3.1** Informazioni e Relazioni | Le informazioni trasmesse attraverso la presentazione sono disponibili a livello di programmazione |
+| **1.3.2** Sequenza significativa | L'ordine di lettura è logico |
+| **1.3.3** Caratteristiche sensoriali | Le istruzioni non si basano esclusivamente su forma, colore, dimensione, posizione, orientamento o suono |
+| **1.4.1** Uso del colore | Il colore non è l'unico mezzo visivo per trasmettere informazioni |
+| **1.4.2** Controllo audio | La riproduzione audio automatica può essere messa in pausa/interrotta |
+| **2.1.1** Tastiera | Tutte le funzionalità disponibili tramite tastiera |
+| **2.1.2** Nessuna trappola sulla tastiera | Il focus della tastiera può essere spostato da qualsiasi componente |
+| **2.1.4** Scorciatoie da tastiera con caratteri | Le scorciatoie a tasto singolo possono essere disattivate o rimappate |
+| **2.2.1** Temporizzazione regolabile | I termini possono essere prorogati |
+| **2.2.2** Pausa, Interrompi, Nascondi | È possibile mettere in pausa i contenuti in movimento/lampeggianti |
+| **2.3.1** Tre lampeggi | Niente lampeggia più di 3 volte al secondo |
+| **2.4.1** Ignora blocchi | Salta collegamento o navigazione punto di riferimento disponibile |
+| **2.4.2** Pagina intitolata | Le pagine hanno titoli descrittivi |
+| **2.4.3** Ordine dei focus | L'ordine del focus preserva il significato |
+| **2.4.4** Scopo del collegamento | Scopo del collegamento chiaro dal testo o dal contesto del collegamento |
+| **2.5.1** Gesti del puntatore | I gesti multipunto hanno alternative a puntatore singolo |
+| **2.5.2** Cancellazione puntatore | L'evento down non attiva l'azione (utilizzare l'evento up o fare clic) |
+| **2.5.3** Etichetta nel nome | Il nome accessibile contiene il testo dell'etichetta visibile |
+| **2.5.4** Attuazione del movimento | Le funzioni attivate dal movimento hanno alternative |
+| **3.1.1** Lingua della pagina | Lingua predefinita specificata in HTML |
+| **3.2.1** In primo piano | Il focus non innesca cambiamenti inaspettati |
+| **3.2.2** Su ingresso | L'input non attiva modifiche impreviste |
+| **3.2.6** Aiuto coerente | I meccanismi di aiuto appaiono nello stesso ordine relativo nelle pagine |
+| **3.3.1** Identificazione errore | Errori di input chiaramente descritti |
+| **3.3.2** Etichette o istruzioni | Gli input del modulo hanno etichette o istruzioni |
+| **3.3.7** Voce ridondante | Le informazioni immesse in precedenza vengono compilate automaticamente o sono disponibili per selezionare |
+| **4.1.2** Nome, Ruolo, Valore | I componenti dell'interfaccia utente hanno nomi accessibili e ruoli corretti |
+
+### Livello AA (standard)
+
+| Criterio | Descrizione |
+|-----------|-------------|
+| **1.2.4** Sottotitoli (Live) | L'audio dal vivo ha didascalie |
+| **1.2.5** Descrizione audio | Il video preregistrato ha una descrizione audio |
+| **1.3.4** Orientamento | Il contenuto non limita l'orientamento |
+| **1.3.5** Identificare lo scopo dell'input | Lo scopo dell'input può essere determinato a livello di codice |
+| **1.4.3** Contrasto (minimo) | 4,5:1 per testo normale, 3:1 per testo grande |
+| **1.4.4** Ridimensiona testo | Il testo può essere ridimensionato al 200% senza perdita di funzionalità |
+| **1.4.5** Immagini di testo | Testo utilizzato al posto delle immagini del testo |
+| **1.4.10** Ridisponi | Il contenuto si adatta alla larghezza di 320 px senza scorrimento orizzontale |
+| **1.4.11** Contrasto non testuale | I componenti dell'interfaccia utente hanno un contrasto 3:1 |
+| **1.4.12** Spaziatura testo | Il contenuto si adatta alle modifiche della spaziatura del testo |
+| **1.4.13** Contenuti al passaggio del mouse/messa a fuoco | Il contenuto aggiuntivo è ignorabile, trasferibile, persistente |
+| **2.4.5** Modi multipli | Diversi modi per trovare pagine |
+| **2.4.6** Intestazioni ed etichette | I titoli e le etichette sono descrittivi |
+| **2.4.7** Focus visibile | L'indicatore di messa a fuoco è visibile |
+| **2.4.11** Messa a fuoco non oscurata (minimo) | L'elemento focalizzato non è completamente nascosto dal contenuto creato dall'autore |
+| **2.5.7** Movimenti di trascinamento | Le azioni di trascinamento hanno alternative a puntatore singolo |
+| **2.5.8** Dimensione target (minima) | I target interattivi sono almeno 24×24 pixel CSS (con eccezioni) |
+| **3.1.2** Lingua delle parti | Le modifiche alla lingua sono contrassegnate |
+| **3.2.3** Navigazione coerente | La navigazione è coerente tra le pagine |
+| **3.2.4** Identificazione coerente | La stessa funzionalità utilizza le stesse etichette |
+| **3.3.3** Suggerimento errore | Correzioni di errori suggerite quando note |
+| **3.3.4** Prevenzione degli errori (legale) | Le azioni possono essere annullate o confermate |
+| **3.3.8** Autenticazione accessibile (minimo) | Nessun test delle funzioni cognitive per l'accesso a meno che non venga fornita un'alternativa o assistenza |
+| **4.1.3** Messaggi di stato | Messaggi di stato annunciati agli screen reader |
+
+### Livello AAA (potenziato)
+
+| Criterio | Descrizione |
+|-----------|-------------|
+| **1.4.6** Contrasto (migliorato) | 7:1 per testo normale, 4,5:1 per testo grande |
+| **1.4.8** Presentazione visiva | È possibile selezionare i colori di primo piano/sfondo |
+| **1.4.9** Immagini di testo (nessuna eccezione) | Nessuna immagine di testo |
+| **2.1.3** Tastiera (nessuna eccezione) | Tutte le funzionalità accessibili tramite tastiera |
+| **2.2.3** Nessuna tempistica | Nessun limite di tempo |
+| **2.2.4** Interruzioni | Le interruzioni possono essere rinviate |
+| **2.2.5** Riautenticazione | Dati conservati durante la riautenticazione |
+| **2.2.6** Timeout | Gli utenti sono stati avvisati della perdita di dati dovuta all'inattività |
+| **2.3.2** Tre lampeggi | Nessun contenuto lampeggia più di 3 volte |
+| **2.3.3** Animazione dalle interazioni | L'animazione del movimento può essere disabilitata |
+| **2.4.8** Posizione | La posizione dell'utente all'interno del sito è disponibile |
+| **2.4.9** Scopo del collegamento (solo collegamento) | Lo scopo del collegamento è chiaro solo dal testo del collegamento |
+| **2.4.10** Titoli delle sezioni | Le sezioni hanno intestazioni |
+| **2.4.12** Messa a fuoco non oscurata (migliorata) | Nessuna parte dell'elemento focalizzato è nascosta dal contenuto creato dall'autore |
+| **2.4.13** Aspetto del focus | L'indicatore di messa a fuoco ha un'area e un contrasto sufficienti e non è oscurato |
+| **3.1.3** Parole insolite | Definizioni disponibili per parole insolite |
+| **3.1.4** Abbreviazioni | Abbreviazioni ampliate |
+| **3.1.5** Livello di lettura | Contenuti alternativi per testi complessi |
+| **3.1.6** Pronuncia | Pronuncia disponibile dove necessario |
+| **3.2.5** Modifica su richiesta | Modifiche avviate solo dall'utente |
+| **3.3.5** Aiuto | Guida sensibile al contesto disponibile |
+| **3.3.6** Prevenzione degli errori (tutti) | Tutti i moduli inviati possono essere esaminati |
+| **3.3.9** Autenticazione accessibile (avanzata) | Nessun test delle funzioni cognitive per il login (nessuna eccezione per il riconoscimento di oggetti o contenuti personali) |
+
+## Modelli ARIA comuni
+
+### Pulsanti
+```html
+<button>Etichetta</button>
+<!-- o -->
+<button aria-label="Chiudi finestra di dialogo">×</button>
+```
+
+### Collegamenti
+```html
+<a href="/page">Testo del collegamento descrittivo</a>
+<!-- Collegamenti esterni -->
+<a href="https://external.com" target="_blank" rel="noopener">
+  Sito esterno
+  <span class="visually-hidden">(si apre in una nuova scheda)</span>
+</a>
+```
+
+### Campi del modulo
+```html
+<label for="email">Indirizzo email</label>
+<input type="email" id="email" aria-descriptionby="email-hint">
+<p id="email-hint">Non condivideremo mai la tua email.</p>
+```
+
+### Stati di errore
+```html
+<label for="email">E-mail</label>
+<input type="email" id="email" aria-invalid="true" aria-descriptionby="email-error">
+<p id="email-error" role="alert">Inserisci un indirizzo email valido.</p>
+```
+
+### Navigazione
+```html
+<nav aria-label="Principale">
+  <ul>
+    <li><a href="/" aria-current="page">Home</a></li>
+    <li><a href="/about">Informazioni</a></li>
+  </ul>
+</nav>
+```
+
+### Modali
+```html
+<div role="dialogo" aria-modal="true" aria-labelledby="dialogo-titolo">
+  <h2 id="dialog-title">Conferma azione</h2>
+  <!-- contenuto -->
+</div>
+```
+
+### Regioni vive
+```html
+<!-- Gentile (attende la pausa nel discorso) -->
+<div aria-live="polite">Aggiornamento stato qui</div>
+
+<!-- Assertivo (interrompe immediatamente) -->
+<div aria-live="assertive" role="alert">Messaggio di errore qui</div>
+
+<!-- Stato (educato, implicito) -->
+<div role="status">Caricamento completato</div>
+```
+
+## Cosa è cambiato dalla versione 2.1 alla versione 2.2
+
+| Cambia | Criterio | Livello |
+|--------|-----------|-------|
+| **Rimosso** | 4.1.1 Analisi | A |
+| **Aggiunto** | 2.4.11 Messa a fuoco non oscurata (minima) | AA |
+| **Aggiunto** | 2.4.12 Focus non oscurato (migliorato) | AAA |
+| **Aggiunto** | 2.4.13 Aspetto del focus | AAA |
+| **Aggiunto** | 2.5.7 Movimenti di trascinamento | AA |
+| **Aggiunto** | 2.5.8 Dimensione target (minima) | AA |
+| **Aggiunto** | 3.2.6 Aiuto coerente | A |
+| **Aggiunto** | 3.3.7 Voce ridondante | A |
+| **Aggiunto** | 3.3.8 Autenticazione accessibile (minima) | AA |
+| **Aggiunto** | 3.3.9 Autenticazione accessibile (avanzata) | AAA |
+
+## Strumenti di test
+
+| Strumento | Digitare | URL |
+|------|------|-----|
+| axDevTools | Estensione del browser | [deque.com/axe](https://www.deque.com/axe/) |
+| ONDA | Estensione del browser | [wave.webaim.org](https://wave.webaim.org/) |
+| Faro | Integrato in Chrome | DevTools → Faro |
+| NVDA | Lettore di schermo (Windows) | [nvaccess.org](https://www.nvaccess.org/) |
+| Voce fuori campo | Lettore di schermo (Mac) | Integrato in macOS |
+| Analizzatore del contrasto colore | Applicazione desktop | [tpgi.com](https://www.tpgi.com/color-contrast-checker/) |
+
+## Fonti
+
+- [Raccomandazione W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/)
+- [Riferimento rapido WCAG 2.2](https://www.w3.org/WAI/WCAG22/quickref/)
+- [Novità nelle WCAG 2.2](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/)
+# Referência rápida WCAG 2.2
+
+## Critérios de sucesso por nível
+
+### Nível A (mínimo)
+
+| Critério | Descrição |
+|-----------|------------|
+| **1.1.1** Conteúdo não textual | Todas as imagens e ícones possuem alternativas de texto |
+| **1.2.1** Somente áudio/Somente vídeo | Fornecer transcrição ou audiodescrição |
+| **1.2.2** Legendas | Vídeo com áudio possui legenda |
+| **1.2.3** Descrição de áudio | Vídeo possui audiodescrição |
+| **1.3.1** Informações e Relacionamentos | As informações transmitidas por meio de apresentação estão disponíveis de forma programática |
+| **1.3.2** Sequência significativa | A ordem de leitura é lógica |
+| **1.3.3** Características sensoriais | As instruções não dependem apenas de forma, cor, tamanho, localização, orientação ou som |
+| **1.4.1** Uso de cores | A cor não é o único meio visual de transmitir informações |
+| **1.4.2** Controle de áudio | A reprodução de áudio automaticamente pode ser pausada/parada |
+| **2.1.1** Teclado | Todas as funcionalidades disponíveis via teclado |
+| **2.1.2** Sem armadilha de teclado | O foco do teclado pode ser afastado de qualquer componente |
+| **2.1.4** Atalhos de teclas de caracteres | Atalhos de tecla única podem ser desativados ou remapeados |
+| **2.2.1** Tempo ajustável | Os prazos podem ser prorrogados |
+| **2.2.2** Pausar, Parar, Ocultar | Conteúdo em movimento/piscando pode ser pausado |
+| **2.3.1** Três flashes | Nada pisca mais de 3 vezes por segundo |
+| **2.4.1** Bloqueios de desvio | Pular link ou navegação de ponto de referência disponível |
+| **2.4.2** Página intitulada | As páginas têm títulos descritivos |
+| **2.4.3** Ordem de foco | A ordem do foco preserva o significado |
+| **2.4.4** Finalidade do link | Finalidade do link clara no texto ou contexto do link |
+| **2.5.1** Gestos de ponteiro | Gestos multiponto têm alternativas de ponteiro único |
+| **2.5.2** Cancelamento do ponteiro | Evento inativo não aciona ação (use evento ativo ou clique) |
+| **2.5.3** Etiqueta no nome | O nome acessível contém texto de rótulo visível |
+| **2.5.4** Atuação de movimento | Funções acionadas por movimento têm alternativas |
+| **3.1.1** Idioma da página | Idioma padrão especificado em HTML |
+| **3.2.1** Em foco | O foco não desencadeia mudanças inesperadas |
+| **3.2.2** Na entrada | A entrada não desencadeia alterações inesperadas |
+| **3.2.6** Ajuda consistente | Os mecanismos de ajuda aparecem na mesma ordem relativa nas páginas |
+| **3.3.1** Identificação de erros | Erros de introdução claramente descritos |
+| **3.3.2** Etiquetas ou instruções | As entradas do formulário possuem rótulos ou instruções |
+| **3.3.7** Entrada Redundante | As informações inseridas anteriormente são preenchidas automaticamente ou ficam disponíveis para seleção |
+| **4.1.2** Nome, Função, Valor | Os componentes da UI têm nomes acessíveis e funções corretas |
+
+### Nível AA (padrão)
+
+| Critério | Descrição |
+|-----------|------------|
+| **1.2.4** Legendas (ao vivo) | Áudio ao vivo tem legendas |
+| **1.2.5** Descrição de áudio | Vídeo pré-gravado possui audiodescrição |
+| **1.3.4** Orientação | Conteúdo não restringe orientação |
+| **1.3.5** Identificar a finalidade da entrada | A finalidade da entrada pode ser determinada programaticamente |
+| **1.4.3** Contraste (Mínimo) | 4,5:1 para texto normal, 3:1 para texto grande |
+| **1.4.4** Redimensionar texto | O texto pode ser redimensionado para 200% sem perda de funcionalidade |
+| **1.4.5** Imagens de texto | Texto usado em vez de imagens de texto |
+| **1.4.10** Refluxo | O conteúdo reflui com largura de 320px sem rolagem horizontal |
+| **1.4.11** Contraste sem texto | Os componentes da UI têm contraste 3:1 |
+| **1.4.12** Espaçamento de texto | O conteúdo se adapta às alterações de espaçamento do texto |
+| **1.4.13** Conteúdo ao passar o mouse/foco | O conteúdo adicional pode ser descartado, pairável e persistente |
+| **2.4.5** Múltiplas maneiras | Várias maneiras de encontrar páginas |
+| **2.4.6** Títulos e Rótulos | Os títulos e rótulos são descritivos |
+| **2.4.7** Foco visível | O indicador de foco está visível |
+| **2.4.11** Foco não obscurecido (mínimo) | O elemento em foco não está totalmente oculto pelo conteúdo criado pelo autor |
+| **2.5.7** Movimentos de arrastamento | Ações de arrastar têm alternativas de ponteiro único |
+| **2.5.8** Tamanho alvo (mínimo) | Os alvos interativos têm pelo menos 24×24 pixels CSS (com exceções) |
+| **3.1.2** Idioma das Peças | As alterações de idioma estão marcadas |
+| **3.2.3** Navegação Consistente | A navegação é consistente nas páginas |
+| **3.2.4** Identificação Consistente | A mesma funcionalidade usa os mesmos rótulos |
+| **3.3.3** Sugestão de erro | Correções de erros sugeridas quando conhecidas |
+| **3.3.4** Prevenção de erros (legal) | Ações podem ser revertidas ou confirmadas |
+| **3.3.8** Autenticação acessível (mínimo) | Nenhum teste de função cognitiva para login, a menos que seja fornecida uma alternativa ou assistência |
+| **4.1.3** Mensagens de status | Mensagens de status anunciadas para leitores de tela |
+
+### Nível AAA (aprimorado)
+
+| Critério | Descrição |
+|-----------|------------|
+| **1.4.6** Contraste (aprimorado) | 7:1 para texto normal, 4,5:1 para texto grande |
+| **1.4.8** Apresentação Visual | As cores de primeiro plano/fundo podem ser selecionadas |
+| **1.4.9** Imagens de texto (sem exceção) | Sem imagens de texto |
+| **2.1.3** Teclado (sem exceção) | Todas as funcionalidades do teclado acessíveis |
+| **2.2.3** Sem tempo | Sem limites de tempo |
+| **2.2.4** Interrupções | As interrupções podem ser adiadas |
+| **2.2.5** Reautenticação | Dados preservados na reautenticação |
+| **2.2.6** Tempos limite | Usuários alertados sobre perda de dados por inatividade |
+| **2.3.2** Três flashes | Nenhum conteúdo pisca mais de 3 vezes |
+| **2.3.3** Animação de interações | A animação em movimento pode ser desativada |
+| **2.4.8** Localização | A localização do usuário no site está disponível |
+| **2.4.9** Finalidade do link (somente link) | A finalidade do link fica clara apenas no texto do link |
+| **2.4.10** Títulos de seção | As seções têm títulos |
+| **2.4.12** Foco não obscurecido (aprimorado) | Nenhuma parte do elemento em foco fica oculta pelo conteúdo criado pelo autor |
+| **2.4.13** Aparência do foco | O indicador de foco tem área e contraste suficientes e não está obscurecido |
+| **3.1.3** Palavras incomuns | Definições disponíveis para palavras incomuns |
+| **3.1.4** Abreviações | Abreviaturas expandidas |
+| **3.1.5** Nível de leitura | Conteúdo alternativo para textos complexos |
+| **3.1.6** Pronúncia | Pronúncia disponível quando necessário |
+| **3.2.5** Alteração mediante solicitação | Mudanças iniciadas apenas pelo usuário |
+| **3.3.5** Ajuda | Ajuda contextual disponível |
+| **3.3.6** Prevenção de erros (todas) | Todos os envios de formulários podem ser revisados ​​|
+| **3.3.9** Autenticação acessível (aprimorada) | Nenhum teste de função cognitiva para login (sem exceções de reconhecimento de objeto ou conteúdo pessoal) |
+
+## Padrões ARIA comuns
+
+### Botões
+```html
+<button>Rótulo</button>
+<!-- ou -->
+<button aria-label="Fechar diálogo">×</button>
+```
+
+###Links
+```html
+<a href="/page">Texto descritivo do link</a>
+<!-- Links externos -->
+<a href="https://external.com" target="_blank" rel="noopener">
+  Site externo
+  <span class="visually-hidden">(abre em uma nova aba)</span>
+</a>
+```
+
+### Campos do formulário
+```html
+<label for="email">Endereço de e-mail</label>
+<input type="email" id="email" aria-describedby="email-hint">
+<p id="email-hint">Nunca compartilharemos seu e-mail.</p>
+```
+
+### Estados de erro
+```html
+<label for="email">E-mail</label>
+<input type="email" id="email" aria-invalid="true" aria-describedby="email-error">
+<p id="email-error" role="alert">Insira um endereço de e-mail válido.</p>
+```
+
+### Navegação
+```html
+<nav aria-label="Principal">
+  <ul>
+    <li><a href="/" aria-current="page">Página inicial</a></li>
+    <li><a href="/about">Sobre</a></li>
+  </ul>
+</nav>
+```
+
+### Modais
+```html
+<div role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+  <h2 id="dialog-title">Confirmar ação</h2>
+  <!-- conteúdo -->
+</div>
+```
+
+### Regiões ativas
+```html
+<!-- Educado (aguarda pausa na fala) -->
+<div aria-live="polite">Atualização de status aqui</div>
+
+<!-- Assertivo (interrompe imediatamente) -->
+<div aria-live="assertive" role="alert">Mensagem de erro aqui</div>
+
+<!-- Status (educado, implícito) -->
+<div role="status">Carregamento concluído</div>
+```
+
+## O que mudou de 2.1 para 2.2
+
+| Alterar | Critério | Nível |
+|--------|-----------|-------|
+| **Removido** | 4.1.1 Análise | Um |
+| **Adicionado** | 2.4.11 Foco não obscurecido (mínimo) | AA |
+| **Adicionado** | 2.4.12 Foco não obscurecido (aprimorado) | AAA |
+| **Adicionado** | 2.4.13 Aparência do foco | AAA |
+| **Adicionado** | 2.5.7 Movimentos de Arrasto | AA |
+| **Adicionado** | 2.5.8 Tamanho alvo (mínimo) | AA |
+| **Adicionado** | 3.2.6 Ajuda consistente | Um |
+| **Adicionado** | 3.3.7 Entrada Redundante | Um |
+| **Adicionado** | 3.3.8 Autenticação Acessível (Mínima) | AA |
+| **Adicionado** | 3.3.9 Autenticação Acessível (Aprimorada) | AAA |
+
+## Ferramentas de teste
+
+| Ferramenta | Tipo | URL |
+|------|------|-----|
+| machado DevTools | Extensão do navegador | [deque.com/axe](https://www.deque.com/axe/) |
+| ONDA | Extensão do navegador | [wave.webaim.org](https://wave.webaim.org/) |
+| Farol | Integrado ao Chrome | DevTools → Farol |
+| NVDA | Leitor de tela (Windows) | [nvaccess.org](https://www.nvaccess.org/) |
+| VozOver | Leitor de tela (Mac) | Integrado ao macOS |
+| Analisador de contraste de cores | Aplicativo de desktop | [tpgi.com](https://www.tpgi.com/color-contrast-checker/) |
+
+## Fontes
+
+- [Recomendação WCAG 2.2 W3C](https://www.w3.org/TR/WCAG22/)
+- [Referência rápida do WCAG 2.2](https://www.w3.org/WAI/WCAG22/quickref/)
+- [O que há de novo nas WCAG 2.2](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/)

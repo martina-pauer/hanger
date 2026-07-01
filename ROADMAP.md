@@ -73,3 +73,23 @@
 ## 2) Определите требования к пользователям, настроенные для каждого сервера, на котором установлено это
 ## 3) Найдите человека, с которым можно провести собеседование с возможными будущими пользователями.
 ## 4) Поиск финансирования
+# [it] NextSteps
+## 1) Registrati solo per gli Utenti che hanno superato la prova di selezione
+## 2) Definire i requisiti per gli utenti personalizzati per ciascun server su cui è stato installato questo
+## 3) Cerca persona da intervistare a possibili futuri utenti
+## 4) Ricerca Finanziamento
+# [it] NextSteps
+## 1) Registrati solo per gli Utenti che hanno superato la prova di selezione
+## 2) Definire i requisiti per gli utenti personalizzati per ciascun server su cui è stato installato questo
+## 3) Cerca persona da intervistare a possibili futuri utenti
+## 4) Ricerca Finanziamento
+# [pt] Próximos Passos
+## 1) Cadastre apenas usuários que passaram no teste de seleção
+## 2) Definir requisitos de usuários customizados para cada servidor onde foi instalado este
+## 3) Procure pessoa para entrevistar possíveis futuros usuários
+## 4) Financiamento de pesquisa
+# [pt] Próximos Passos
+## 1) Cadastre apenas usuários que passaram no teste de seleção
+## 2) Definir requisitos de usuários customizados para cada servidor onde foi instalado este
+## 3) Procure pessoa para entrevistar possíveis futuros usuários
+## 4) Financiamento de pesquisa

@@ -293,3 +293,129 @@ Denken Sie daran: Claude ist zu außergewöhnlicher kreativer Arbeit fähig. Hal
 **ВАЖЛИВО**: відповідайте складність реалізації естетичному баченню. Максималістичний дизайн потребує детального коду з великою кількістю анімації та ефектів. Мінімалістичний або вишуканий дизайн потребує стриманості, точності та ретельної уваги до інтервалів, типографіки та тонких деталей. Елегантність походить від вдалого втілення бачення.
 
 Пам’ятайте: Клод здатний на надзвичайну творчість. Не стримуйтеся, покажіть, що справді можна створити, якщо мислити нестандартно та повністю віддаватись унікальному баченню.
+---
+Название: Frontend-дизайн
+Описание: Создавайте уникальные интерфейсы промышленного уровня с высоким качеством дизайна. Используйте этот навык, когда пользователь просит создать веб-компоненты, страницы, артефакты, плакаты или приложения (примеры включают веб-сайты, целевые страницы, информационные панели, компоненты React, макеты HTML/CSS или при стилизации/украшении любого веб-интерфейса). Создает креативный, совершенный код и дизайн пользовательского интерфейса, избегающий общей эстетики искусственного интеллекта.
+лицензия: полные условия в LICENSE.txt.
+---
+
+Этот навык помогает создавать отличительные интерфейсы производственного уровня, которые избегают общей эстетики «отбросов искусственного интеллекта». Реализуйте реальный работающий код, уделяя исключительное внимание эстетическим деталям и творческому выбору.
+
+Пользователь предоставляет требования к интерфейсу: компонент, страница, приложение или интерфейс для создания. Они могут включать контекст о цели, аудитории или технических ограничениях.
+
+## Дизайнерское мышление
+
+Прежде чем писать код, поймите контекст и придерживайтесь Смелого эстетического направления:
+- **Цель**: какую проблему решает этот интерфейс? Кто его использует?
+- **Тон**: выберите крайний: брутальный минимализм, максималистский хаос, ретро-футуристический, органический/натуральный, роскошный/утонченный, игривый/игрушечный, редакционный/журнальный, бруталистский/грубый, арт-деко/геометрический, мягкий/пастельный, индустриальный/утилитарный и т. д. На выбор очень много вкусов. Используйте их для вдохновения, но создайте тот, который соответствует эстетическому направлению.
+- **Ограничения**: технические требования (фреймворк, производительность, доступность).
+- **Дифференциация**: что делает это НЕЗАБЫВАЕМЫМ? Что единственное, что кто-то запомнит?
+
+**КРИТИЧЕСКОЕ**: выберите четкое концептуальное направление и выполняйте его с точностью. И смелый максимализм, и изысканный минимализм работают — главное — намеренность, а не интенсивность.
+
+Затем реализуйте рабочий код (HTML/CSS/JS, React, Vue и т. д.), а именно:
+- Производственный и функциональный
+- Визуально яркий и запоминающийся
+- Сплоченность с четкой эстетической точкой зрения
+- Тщательно продумана каждая деталь.
+
+## Рекомендации по эстетике внешнего интерфейса
+
+Сосредоточьтесь на:
+- **Типографика**: выбирайте красивые, уникальные и интересные шрифты. Избегайте общих шрифтов, таких как Arial и Inter; Вместо этого выбирайте уникальные варианты, которые улучшают эстетику интерфейса; неожиданный, характерный выбор шрифтов. Сочетайте характерный дисплейный шрифт с изысканным основным шрифтом.
+- **Цвет и тема**: придерживайтесь целостной эстетики. Используйте переменные CSS для обеспечения единообразия. Доминирующие цвета с резкими акцентами выигрывают у робких, равномерно распределенных палитр.
+- **Движение**: используйте анимацию для эффектов и микровзаимодействий. Отдавайте приоритет решениям, использующим только CSS, для HTML. Используйте библиотеку Motion для React, если она доступна. Сосредоточьтесь на наиболее впечатляющих моментах: одна хорошо организованная загрузка страницы с поэтапным раскрытием (задержкой анимации) вызывает больше удовольствия, чем разбросанные микровзаимодействия. Используйте триггеры прокрутки и состояния наведения, которые удивляют.
+- **Пространственная композиция**: неожиданная планировка. Асимметрия. Перекрывать. Диагональный поток. Элементы, разрушающие сетку. Щедрое негативное пространство ИЛИ контролируемая плотность.
+- **Фоны и визуальные детали**: создайте атмосферу и глубину, а не используйте сплошные цвета по умолчанию. Добавьте контекстные эффекты и текстуры, соответствующие общей эстетике. Применяйте творческие формы, такие как градиентные сетки, шумовые текстуры, геометрические узоры, многослойную прозрачность, эффектные тени, декоративные границы, пользовательские курсоры и наложения зернистости.
+
+НИКОГДА не используйте общую эстетику, созданную искусственным интеллектом, такую ​​​​как чрезмерно используемые семейства шрифтов (Inter, Roboto, Arial, системные шрифты), шаблонные цветовые схемы (особенно фиолетовые градиенты на белом фоне), предсказуемые макеты и шаблоны компонентов, а также шаблонный дизайн, которому не хватает контекстно-зависимого характера.
+
+Интерпретируйте творчески и делайте неожиданный выбор, который действительно соответствует контексту. Ни один дизайн не должен быть одинаковым. Меняйтесь между светлыми и темными темами, разными шрифтами и разной эстетикой. НИКОГДА не сходитесь в общих решениях (например, Space Grotesk) среди поколений.
+
+**ВАЖНО**: сопоставьте сложность реализации с эстетическим видением. Максималистические проекты требуют тщательно продуманного кода с обширной анимацией и эффектами. Минималистичный или изысканный дизайн требует сдержанности, точности и пристального внимания к интервалам, типографике и тонким деталям. Элегантность возникает в результате хорошей реализации замысла.
+
+Помните: Клод способен на необыкновенную творческую работу. Не сдерживайтесь, покажите, что действительно можно создать, если мыслить нестандартно и полностью посвятить себя уникальному видению.
+---
+nome: design frontend
+descrizione: crea interfacce frontend distintive di livello produttivo con un'elevata qualità di progettazione. Utilizza questa abilità quando l'utente chiede di creare componenti web, pagine, artefatti, poster o applicazioni (gli esempi includono siti web, pagine di destinazione, dashboard, componenti React, layout HTML/CSS o quando si stili/abbelliscono qualsiasi interfaccia utente web). Genera codice creativo e raffinato e design dell'interfaccia utente che evita l'estetica generica dell'IA.
+licenza: completare i termini in LICENSE.txt
+---
+
+Questa competenza guida la creazione di interfacce frontend distintive di livello produttivo che evitano l'estetica generica della "slop AI". Implementa un vero codice di lavoro con un'eccezionale attenzione ai dettagli estetici e alle scelte creative.
+
+L'utente fornisce i requisiti del frontend: un componente, una pagina, un'applicazione o un'interfaccia da creare. Possono includere contesto relativo allo scopo, al pubblico o ai vincoli tecnici.
+
+## Pensiero progettuale
+
+Prima di scrivere codice, comprendi il contesto e impegnati in una direzione estetica BOLD:
+- **Scopo**: quale problema risolve questa interfaccia? Chi lo usa?
+- **Tone**: scegli un estremo: brutalmente minimale, caos massimalista, retro-futuristico, organico/naturale, lussuoso/raffinato, giocoso/giocattoloso, editoriale/rivista, brutalista/grezzo, art deco/geometrico, morbido/pastello, industriale/utilitaristico, ecc. Ci sono così tanti gusti tra cui scegliere. Usali come ispirazione, ma progettane uno che sia fedele alla direzione estetica.
+- **Vincoli**: requisiti tecnici (quadro, prestazioni, accessibilità).
+- **Differenziazione**: cosa rende questo INDIMENTICABILE? Qual è l'unica cosa che qualcuno ricorderà?
+
+**CRITICO**: scegli una direzione concettuale chiara ed eseguila con precisione. Il massimalismo audace e il minimalismo raffinato funzionano entrambi: la chiave è l'intenzionalità, non l'intensità.
+
+Quindi implementa il codice funzionante (HTML/CSS/JS, React, Vue, ecc.) ovvero:
+- Di livello produttivo e funzionale
+- Visivamente sorprendente e memorabile
+- Coeso con un chiaro punto di vista estetico
+- Meticolosamente rifinito in ogni dettaglio
+
+## Linee guida sull'estetica del frontend
+
+Concentrati su:
+- **Tipografia**: scegli caratteri belli, unici e interessanti. Evita font generici come Arial e Inter; optare invece per scelte distintive che elevino l'estetica del frontend; scelte di caratteri inaspettate e caratterizzanti. Abbina un carattere di visualizzazione distintivo con un carattere del corpo raffinato.
+- **Colore e tema**: impegnati per un'estetica coerente. Utilizza le variabili CSS per coerenza. I colori dominanti con accenti netti superano le tavolozze timide e uniformemente distribuite.
+- **Movimento**: utilizza le animazioni per effetti e microinterazioni. Dai la priorità alle soluzioni solo CSS per HTML. Utilizza la libreria Motion per React quando disponibile. Concentrati sui momenti ad alto impatto: un caricamento di pagina ben orchestrato con rivelazioni scaglionate (ritardo dell'animazione) crea più piacere delle microinterazioni sparse. Usa l'attivazione dello scorrimento e gli stati al passaggio del mouse che sorprendono.
+- **Composizione spaziale**: layout inaspettati. Asimmetria. Sovrapposizione. Flusso diagonale. Elementi rivoluzionari. Spazio negativo generoso O densità controllata.
+- **Sfondi e dettagli visivi**: crea atmosfera e profondità invece di utilizzare colori solidi per impostazione predefinita. Aggiungi effetti e texture contestuali che si adattino all'estetica generale. Applica forme creative come trame sfumate, texture disturbate, motivi geometrici, trasparenze stratificate, ombre drammatiche, bordi decorativi, cursori personalizzati e sovrapposizioni di grana.
+
+Non utilizzare MAI estetiche generiche generate dall'intelligenza artificiale come famiglie di caratteri abusate (Inter, Roboto, Arial, caratteri di sistema), schemi di colori cliché (in particolare gradienti viola su sfondi bianchi), layout e modelli di componenti prevedibili e design con lo stampino privo di carattere specifico del contesto.
+
+Interpreta in modo creativo e fai scelte inaspettate che sembrano veramente progettate per il contesto. Nessun design dovrebbe essere lo stesso. Varia tra temi chiari e scuri, caratteri diversi, estetica diversa. Non convergere MAI su scelte comuni (Space Grotesk, per esempio) tra generazioni.
+
+**IMPORTANTE**: abbinare la complessità dell'implementazione alla visione estetica. I progetti massimalisti necessitano di un codice elaborato con animazioni ed effetti estesi. I design minimalisti o raffinati richiedono moderazione, precisione e un'attenta attenzione alla spaziatura, alla tipografia e ai dettagli sottili. L’eleganza deriva dall’eseguire bene la visione.
+
+Ricorda: Claude è capace di un lavoro creativo straordinario. Non trattenerti, mostra ciò che può veramente essere creato pensando fuori dagli schemi e impegnandosi pienamente in una visione distintiva.
+---
+nome: frontend-design
+descrição: Crie interfaces front-end distintas de nível de produção com alta qualidade de design. Use essa habilidade quando o usuário solicitar a construção de componentes da web, páginas, artefatos, pôsteres ou aplicativos (exemplos incluem sites, landing pages, painéis, componentes React, layouts HTML/CSS ou ao estilizar/embelezar qualquer UI da web). Gera código criativo e sofisticado e design de interface do usuário que evita a estética genérica de IA.
+licença: preencha os termos em LICENSE.txt
+---
+
+Essa habilidade orienta a criação de interfaces de front-end distintas e de nível de produção que evitam a estética genérica de "desperdício de IA". Implemente código funcional real com atenção excepcional aos detalhes estéticos e escolhas criativas.
+
+O usuário fornece requisitos de frontend: um componente, página, aplicativo ou interface para construir. Eles podem incluir contexto sobre o propósito, público ou restrições técnicas.
+
+## Design Thinking
+
+Antes de codificar, entenda o contexto e comprometa-se com uma direção estética OUSADA:
+- **Objetivo**: Que problema essa interface resolve? Quem usa?
+- **Tom**: Escolha um extremo: brutalmente minimalista, caos maximalista, retrofuturista, orgânico/natural, luxuoso/refinado, lúdico/brinquedo, editorial/revista, brutalista/cru, art déco/geométrico, suave/pastel, industrial/utilitário, etc. Há tantos sabores para escolher. Use-os como inspiração, mas crie um que seja fiel à direção estética.
+- **Restrições**: Requisitos técnicos (estrutura, desempenho, acessibilidade).
+- **Diferenciação**: O que torna isso INESQUECÍVEL? Qual é a única coisa que alguém vai lembrar?
+
+**CRÍTICO**: Escolha uma direção conceitual clara e execute-a com precisão. O maximalismo ousado e o minimalismo refinado funcionam – a chave é a intencionalidade, não a intensidade.
+
+Em seguida, implemente o código de trabalho (HTML/CSS/JS, React, Vue, etc.) que é:
+- Nível de produção e funcional
+- Visualmente impressionante e memorável
+- Coeso com um ponto de vista estético claro
+- Meticulosamente refinado em cada detalhe
+
+## Diretrizes de estética de front-end
+
+Concentre-se em:
+- **Tipografia**: Escolha fontes bonitas, únicas e interessantes. Evite fontes genéricas como Arial e Inter; opte por opções distintas que elevem a estética do frontend; escolhas de fontes inesperadas e cheias de personalidade. Combine uma fonte de exibição distinta com uma fonte de corpo refinada.
+- **Cor e tema**: Comprometa-se com uma estética coesa. Use variáveis ​​CSS para consistência. Cores dominantes com detalhes nítidos superam paletas tímidas e distribuídas uniformemente.
+- **Movimento**: use animações para efeitos e microinterações. Priorize soluções somente CSS para HTML. Use a biblioteca Motion para React quando disponível. Concentre-se em momentos de alto impacto: um carregamento de página bem orquestrado com revelações escalonadas (atraso de animação) cria mais prazer do que microinterações dispersas. Use o acionamento de rolagem e estados de foco que surpreendem.
+- **Composição Espacial**: Layouts inesperados. Assimetria. Sobreposição. Fluxo diagonal. Elementos de quebra de grade. Espaço negativo generoso OU densidade controlada.
+- **Planos de fundo e detalhes visuais**: Crie atmosfera e profundidade em vez de usar cores sólidas como padrão. Adicione efeitos contextuais e texturas que correspondam à estética geral. Aplique formas criativas como malhas gradientes, texturas de ruído, padrões geométricos, transparências em camadas, sombras dramáticas, bordas decorativas, cursores personalizados e sobreposições de granulação.
+
+NUNCA use estética genérica gerada por IA, como famílias de fontes usadas demais (Inter, Roboto, Arial, fontes do sistema), esquemas de cores clichês (particularmente gradientes roxos em fundos brancos), layouts e padrões de componentes previsíveis e design pré-fabricado que carece de caráter específico do contexto.
+
+Interprete de forma criativa e faça escolhas inesperadas que pareçam genuinamente projetadas para o contexto. Nenhum design deve ser igual. Varie entre temas claros e escuros, fontes diferentes, estéticas diferentes. NUNCA convergem para escolhas comuns (Space Grotesk, por exemplo) entre gerações.
+
+**IMPORTANTE**: Combine a complexidade da implementação com a visão estética. Projetos maximalistas precisam de código elaborado com animações e efeitos extensos. Projetos minimalistas ou refinados precisam de restrição, precisão e atenção cuidadosa ao espaçamento, tipografia e detalhes sutis. A elegância vem da boa execução da visão.
+
+Lembre-se: Claude é capaz de um trabalho criativo extraordinário. Não hesite, mostre o que realmente pode ser criado quando se pensa fora da caixa e se compromete totalmente com uma visão distinta.

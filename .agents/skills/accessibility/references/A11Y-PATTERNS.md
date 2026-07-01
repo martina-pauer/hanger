@@ -1630,3 +1630,702 @@ form.addEventListener('submit', (e) => {
 | Активувати | VO + пробіл | Введіть |
 | Список заголовків | VO + U, потім стрілки | H / Shift + H |
 | Список посилань | VO + U | K / Shift + K |
+# Шаблоны кода доступности
+
+Практичные шаблоны, готовые к копированию и вставке, отвечающие общим требованиям доступности. Каждый шаблон является автономным и связан с основным файлом [SKILL.md](../SKILL.md).
+
+---
+
+## Модальная ловушка фокуса
+
+Захватите фокус клавиатуры внутри модального диалогового окна, чтобы клавиши Tab/Shift+Tab циклически перемещались по фокусируемым элементам, а Escape закрывал его.
+
+```Javascript
+функция openModal(модальный) {
+  const focusableElements = modal.querySelectorAll(
+    'кнопка, [href], ввод, выбор, текстовая область, [tabindex]:not([tabindex="-1"])'
+  );
+  const firstElement = focusableElements[0];
+  const LastElement = focusableElements[focusableElements.length - 1];
+
+  modal.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+      if (e.shiftKey && document.activeElement === firstElement) {
+        е.preventDefault();
+        последнийЭлемент.фокус();
+      } else if (!e.shiftKey && document.activeElement === LastElement) {
+        е.preventDefault();
+        первыйЭлемент.фокус();
+      }
+    }
+    if (e.key === 'Escape') {
+      закрытьМодальный();
+    }
+  });
+
+  первыйЭлемент.фокус();
+}
+```
+
+Собственный элемент `<dialog>` автоматически обрабатывает захват фокуса — предпочтите его, если это позволяет поддержка браузера.
+
+---
+
+## Пропустить ссылку
+
+Позволяет пользователям клавиатуры обходить повторяющуюся навигацию и сразу переходить к основному содержимому.
+
+```html
+<тело>
+  <a href="#main-content" class="skip-link">Перейти к основному содержанию</a>
+  <header><!-- навигация --></header>
+  <main id="main-content" tabindex="-1">
+    <!-- основное содержание -->
+  </главный>
+</тело>
+```
+
+``` CSS
+.skip-ссылка {
+  позиция: абсолютная;
+  верх: -40 пикселей;
+  слева: 0;
+  фон: #000;
+  цвет: #fff;
+  отступы: 8 пикселей 16 пикселей;
+  z-индекс: 100;
+}
+
+.skip-link:focus {
+  верх: 0;
+}
+```
+
+---
+
+## Обработка ошибок
+
+Сообщайте об ошибках программам чтения с экрана и фокусируйте внимание на первом недопустимом поле при отправке.
+
+```html
+<форма novalidate>
+  <div class="field" aria-live="polite">
+    <label for="email">Электронная почта</label>
+    <input type="электронная почта" id="электронная почта"
+           ария-инвалид="истина"
+           aria-describedby="email-error">
+    <p id="email-error" class="error" role="alert">
+      Введите действительный адрес электронной почты (например, name@example.com).
+    </p>
+  </div>
+</форма>
+```
+
+```Javascript
+form.addEventListener('submit', (e) => {
+  const firstError = form.querySelector('[aria-invalid="true"]');
+  если (первая ошибка) {
+    е.preventDefault();
+    первая ошибка.фокус();
+
+    const errorSummary = document.getElementById('error-summary');
+    errorSummary.textContent =
+      `${errors.length} Обнаружены ошибки. Пожалуйста, исправьте их и повторите попытку.`;
+    errorSummary.focus();
+  }
+});
+```
+
+---
+
+## Метки формы
+
+Каждому входу требуется связанная метка — явная (for/id) или неявная (обертка <label>).
+
+```html
+<!-- ❌ Без привязки меток -->
+<input type="электронная почта" Placeholder="Электронная почта">
+
+<!-- ✅ Явная метка -->
+<label for="email">Адрес электронной почты</label>
+<input type="email" id="email" name="email"
+       требуется autocomplete="электронная почта">
+
+<!-- ✅ Неявная метка -->
+<метка>
+  Адрес электронной почты
+  <input type="email" name="email" autocomplete="email" требуется>
+</метка>
+
+<!-- ✅ С инструкцией -->
+<label for="password">Пароль</label>
+<input type="пароль" id="пароль"
+       aria-describedby="требования к паролю">
+<p id="требования к паролю">
+  Должно быть не менее 8 символов с одной цифрой.
+</p>
+```
+
+---
+
+## Перетаскивание движений
+
+Любое действие, запускаемое перетаскиванием, должно предлагать альтернативу с одним указателем (WCAG 2.5.7).
+
+```html
+<!-- ❌ Изменение порядка только перетаскиванием -->
+<ul class="sortable-list" draggable="true">
+  <li>Пункт 1</li>
+  <li>Пункт 2</li>
+</ul>
+
+<!-- ✅ Альтернативы перетаскивания + кнопки -->
+<ul class="сортируемый-список">
+  <ли>
+    <span>Элемент 1</span>
+    <button aria-label="Переместить элемент 1 вверх">↑</button>
+    <button aria-label="Переместить элемент 1 вниз">↓</button>
+  </li>
+  <ли>
+    <span>Пункт 2</span>
+    <button aria-label="Переместить элемент 2 вверх">↑</button>
+    <button aria-label="Переместить элемент 2 вниз">↓</button>
+  </li>
+</ul>
+```
+
+Также применимо к ползункам, панорамированию карты, палитрам цветов и аналогичным виджетам на основе перетаскивания — всегда предоставляйте эквивалентный щелчок/касание или путь с клавиатуры.
+
+---
+
+## вкладки ARIA
+
+Для вкладок требуются `role="tablist"`, `role="tab"` и `role="tabpanel"` с соответствующей поддержкой `aria-selected`, `aria-controls` и клавиатуры.
+
+```html
+<div role="tablist" aria-label="Информация о продукте">
+  <button role="tab" id="tab-1" aria-selected="true"
+          aria-controls="panel-1">Описание</button>
+  <button role="tab" id="tab-2" aria-selected="false"
+          aria-controls="panel-2" tabindex="-1">Отзывы</button>
+</div>
+<div role="tabpanel" id="panel-1" aria-labelledby="tab-1">
+  <!-- Содержимое панели -->
+</div>
+<div role="tabpanel" id="panel-2" aria-labelledby="tab-2" скрыто>
+  <!-- Содержимое панели -->
+</div>
+```
+
+Клавиши со стрелками должны перемещать фокус между вкладками; активная вкладка получает `tabindex="0"`, а неактивные вкладки используют `tabindex="-1"`.
+
+---
+
+## Живые регионы и уведомления
+
+Используйте `aria-live`, чтобы объявлять динамические изменения контента для программ чтения с экрана без перемещения фокуса.
+
+```html
+<!-- Обновление статуса (вежливо — ждет паузы в речи) -->
+<div aria-live="polite" aria-atomic="true" class="status">
+  <!-- Объявлены обновления контента для программ чтения с экрана -->
+</div>
+
+<!-- Срочные оповещения (напористые — прерывания) -->
+<div role="alert" aria-live="assertive">
+  <!-- Прерывает текущее объявление -->
+</div>
+```
+
+```Javascript
+функция showNotification(message, type = 'вежливый') {
+  constContainer = document.getElementById(`${type}-announcer`);
+  Container.textContent = '';
+  requestAnimationFrame(() => {
+    Container.textContent = сообщение;
+  });
+}
+```
+
+Очистите контейнер перед записью, чтобы одно и то же сообщение вызывало новое объявление.
+
+---
+
+## Команды чтения с экрана
+
+Краткий справочник по наиболее распространенным сочетаниям клавиш для чтения с экрана.
+
+| Действие | VoiceOver (Mac) | НВДА (Windows) |
+|--------|-----------------|----------------|
+| Старт/Стоп | ⌘ + F5 | Ctrl + Alt + Н |
+| Следующий элемент | ВО + → | ↓ |
+| Предыдущий элемент | ВО + ← | ↑ |
+| Активировать | VO + Космос | Войти |
+| Список рубрик | VO + U, затем стрелки | Ч / Shift + Ч |
+| Список ссылок | ВО + У | К / Shift + К |
+# Modelli di codici di accessibilità
+
+Modelli pratici e pronti per il copia-incolla per i requisiti comuni di accessibilità. Ogni pattern è autonomo e collegato dal file principale [SKILL.md](../SKILL.md).
+
+---
+
+## Trappola del focus modale
+
+Intrappola il focus della tastiera all'interno di una finestra di dialogo modale in modo che Tab/Maiusc+Tab scorra gli elementi attivabili ed Escape la chiuda.
+
+```javascript
+funzione openModale(modale) {
+  const focusableElements = modal.querySelectorAll(
+    'pulsante, [href], input, seleziona, textarea, [tabindex]:not([tabindex="-1"])'
+  );
+  const primoElemento = focusableElements[0];
+  const ultimoElemento = focusableElements[focusableElements.length - 1];
+
+  modal.addEventListener('keydown', (e) => {
+    if (e.tasto === 'Tab') {
+      if (e.shiftKey && document.activeElement === primoElemento) {
+        e.preventDefault();
+        ultimoElemento.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        primoElemento.focus();
+      }
+    }
+    if (e.key === 'Escape') {
+      chiudiModale();
+    }
+  });
+
+  primoElemento.focus();
+}
+```
+
+L'elemento nativo "<dialog>" gestisce automaticamente il focus trapping: è preferibile quando il supporto del browser lo consente.
+
+---
+
+## Salta il collegamento
+
+Consente agli utenti della tastiera di ignorare la navigazione ripetitiva e passare direttamente al contenuto principale.
+
+```html
+<corpo>
+  <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+  <header><!-- navigazione --></header>
+  <main id="contenuto-principale" tabindex="-1">
+    <!-- contenuto principale -->
+  </main>
+</corpo>
+```
+
+```css
+.salta collegamento {
+  posizione: assoluta;
+  in alto: -40px;
+  a sinistra: 0;
+  sfondo: #000;
+  colore: #fff;
+  imbottitura: 8px 16px;
+  indice z: 100;
+}
+
+.skip-link:focus {
+  superiore: 0;
+}
+```
+
+---
+
+## Gestione degli errori
+
+Annuncia gli errori agli screen reader e focalizza il primo campo non valido sull'invio.
+
+```html
+<form novalidate>
+  <div class="field" aria-live="educato">
+    <label for="email">E-mail</label>
+    <input type="e-mail" id="e-mail"
+           aria-invalid="vero"
+           aria-descriptionby="email-error">
+    <p id="email-error" class="error" role="alert">
+      Inserisci un indirizzo email valido (ad esempio, nome@esempio.com)
+    </p>
+  </div>
+</forma>
+```
+
+```javascript
+form.addEventListener('invia', (e) => {
+  const firstError = form.querySelector('[aria-invalid="true"]');
+  se (primoErrore) {
+    e.preventDefault();
+    primoErrore.focus();
+
+    const errorSummary = document.getElementById('error-summary');
+    errorSummary.textContent =
+      `Trovati errori ${errors.length}. Correggili e riprova.`;
+    errorSummary.focus();
+  }
+});
+```
+
+---
+
+## Etichette del modulo
+
+Ogni input necessita di un'etichetta associata, esplicita (`for`/`id`) o implicita (che racchiude `<label>`).
+
+```html
+<!-- ❌ Nessuna associazione di etichette -->
+<input type="email" placeholder="Email">
+
+<!-- ✅ Etichetta esplicita -->
+<label for="email">Indirizzo email</label>
+<input type="e-mail" id="e-mail" nome="e-mail"
+       completamento automatico="email" obbligatorio>
+
+<!-- ✅ Etichetta implicita -->
+<etichetta>
+  Indirizzo e-mail
+  <input type="email" name="email" autocomplete="email" richiesto>
+</etichetta>
+
+<!-- ✅ Con istruzioni -->
+<label for="password">Password</label>
+<tipo input="password" id="password"
+       aria-descriptionby="requisiti-password">
+<p id="requisiti-password">
+  Deve contenere almeno 8 caratteri con un numero.
+</p>
+```
+
+---
+
+## Movimenti di trascinamento
+
+Qualsiasi azione innescata dal trascinamento deve offrire un'alternativa a puntatore singolo (WCAG 2.5.7).
+
+```html
+<!-- ❌ Riordino con solo trascinamento -->
+<ul class="sortable-list" draggable="true">
+  <li>Elemento 1</li>
+  <li>Articolo 2</li>
+</ul>
+
+<!-- ✅ Trascina + pulsanti alternativi -->
+<ul class="lista-ordinabile">
+  <li>
+    <span>Elemento 1</span>
+    <button aria-label="Sposta elemento 1 in alto">↑</button>
+    <button aria-label="Sposta elemento 1 verso il basso">↓</button>
+  </li>
+  <li>
+    <span>Elemento 2</span>
+    <button aria-label="Sposta elemento 2 in alto">↑</button>
+    <button aria-label="Sposta elemento 2 verso il basso">↓</button>
+  </li>
+</ul>
+```
+
+Si applica anche a dispositivi di scorrimento, panoramica della mappa, selettori di colori e widget simili basati sul trascinamento: fornisci sempre un clic/tocco equivalente o un percorso da tastiera.
+
+---
+
+## Schede ARIA
+
+Le schede richiedono `role="tablist"`, `role="tab"` e `role="tabpanel"` con il corretto supporto per `aria-selected`, `aria-controls` e tastiera.
+
+```html
+<div role="tablist" aria-label="Informazioni sul prodotto">
+  <button role="tab" id="tab-1" aria-selected="true"
+          aria-controls="panel-1">Descrizione</button>
+  <button role="tab" id="tab-2" aria-selected="false"
+          aria-controls="panel-2" tabindex="-1">Recensioni</button>
+</div>
+<div role="tabpanel" id="panel-1" aria-labelledby="tab-1">
+  <!-- Contenuto del pannello -->
+</div>
+<div role="tabpanel" id="panel-2" aria-labelledby="tab-2" nascosto>
+  <!-- Contenuto del pannello -->
+</div>
+```
+
+I tasti freccia dovrebbero spostare lo stato attivo tra le schede; la scheda attiva riceve `tabindex="0"` mentre le schede inattive utilizzano `tabindex="-1"`.
+
+---
+
+## Regioni e notifiche in tempo reale
+
+Utilizza "aria-live" per annunciare le modifiche ai contenuti dinamici agli screen reader senza spostare il focus.
+
+```html
+<!-- Aggiornamenti di stato (educato - attende la pausa nel discorso) -->
+<div aria-live="educato" aria-atomic="true" class="status">
+  <!-- Aggiornamenti dei contenuti annunciati agli screen reader -->
+</div>
+
+<!-- Avvisi urgenti (assertivo - interruzioni) -->
+<div role="alert" aria-live="assertivo">
+  <!-- Interrompe l'annuncio corrente -->
+</div>
+```
+
+```javascript
+funzione mostraNotifica(messaggio, tipo = 'educato') {
+  const contenitore = document.getElementById(`${type}-announcer`);
+  contenitore.testoContenuto = '';
+  requestAnimationFrame(() => {
+    contenitore.textContent = messaggio;
+  });
+}
+```
+
+Svuotare il contenitore prima di scrivere per garantire che lo stesso messaggio attivi un nuovo annuncio.
+
+---
+
+## Comandi del lettore di schermo
+
+Riferimento rapido per le scorciatoie più comuni dello screen reader.
+
+| Azione | VoiceOver (Mac) | NVDA (Windows) |
+|--------|-----------------|----------------|
+| Avvia/Interrompi | ⌘ + F5 | Ctrl + Alt + N |
+| Articolo successivo | VO + → | ↓ |
+| Elemento precedente | VO + ← | ↑ |
+| Attiva | VO + Spazio | Inserisci |
+| Elenco titoli | VO + U, poi frecce | H / Maiusc + H |
+| Elenco collegamenti | VO + U | K / Maiusc + K |
+# Padrões de código de acessibilidade
+
+Padrões práticos e prontos para copiar e colar para requisitos comuns de acessibilidade. Cada padrão é independente e vinculado ao [SKILL.md](../SKILL.md) principal.
+
+---
+
+## Armadilha de foco modal
+
+Trapa o foco do teclado dentro de uma caixa de diálogo modal para que Tab/Shift+Tab percorra seus elementos focáveis e Escape o feche.
+
+```javascript
+função openModal(modal) {
+  const focusableElements = modal.querySelectorAll(
+    'botão, [href], entrada, seleção, área de texto, [tabindex]:not([tabindex="-1"])'
+  );
+  const primeiroElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
+
+  modal.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        primeiroElement.focus();
+      }
+    }
+    if (e.key === 'Escape') {
+      fecharModal();
+    }
+  });
+
+  primeiroElement.focus();
+}
+```
+
+O elemento nativo `<dialog>` lida com a captura de foco automaticamente – prefira-o quando o suporte do navegador permitir.
+
+---
+
+## Pular link
+
+Permite que os usuários do teclado ignorem a navegação repetitiva e pulem direto para o conteúdo principal.
+
+```html
+<corpo>
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+  <header><!-- navegação --></header>
+  <main id="main-content" tabindex="-1">
+    <!-- conteúdo principal -->
+  </principal>
+</body>
+```
+
+```css
+.skip-link {
+  posição: absoluta;
+  superior: -40px;
+  esquerda: 0;
+  plano de fundo: #000;
+  cor: #fff;
+  preenchimento: 8px 16px;
+  índice z: 100;
+}
+
+.skip-link:foco {
+  superior: 0;
+}
+```
+
+---
+
+## Tratamento de erros
+
+Anuncie erros aos leitores de tela e concentre o primeiro campo inválido no envio.
+
+```html
+<formulário novalidate>
+  <div class="campo" aria-live="educado">
+    <label for="email">E-mail</label>
+    <input type="e-mail" id="e-mail"
+           aria-inválido="verdadeiro"
+           aria-describedby="email-error">
+    <p id="email-error" class="error" role="alert">
+      Insira um endereço de e-mail válido (por exemplo, nome@example.com)
+    </p>
+  </div>
+</form>
+```
+
+```javascript
+form.addEventListener('enviar', (e) => {
+  const firstError = form.querySelector('[aria-invalid="true"]');
+  if (primeiroErro) {
+    e.preventDefault();
+    primeiroErro.focus();
+
+    const errorSummary = document.getElementById('resumo do erro');
+    errorSummary.textContent =
+      `${errors.length} erros encontrados. Por favor, corrija-os e tente novamente.`;
+    erroSummary.focus();
+  }
+});
+```
+
+---
+
+## Rótulos de formulário
+
+Cada entrada precisa de um rótulo associado - seja explícito (`for`/`id`) ou implícito (quebrando `<label>`).
+
+```html
+<!-- ❌ Sem associação de rótulo -->
+<input type="e-mail" placeholder="E-mail">
+
+<!-- ✅ Rótulo explícito -->
+<label for="email">Endereço de e-mail</label>
+<input type="e-mail" id="e-mail" nome="e-mail"
+       preenchimento automático = "e-mail" obrigatório>
+
+<!-- ✅ Rótulo implícito -->
+<rótulo>
+  Endereço de e-mail
+  <input type="email" name="email" autocomplete="email" obrigatório>
+</label>
+
+<!-- ✅ Com instruções -->
+<label for="senha">Senha</label>
+<input type="senha" id="senha"
+       aria-describedby="requisitos de senha">
+<p id="requisitos de senha">
+  Deve ter pelo menos 8 caracteres com um número.
+</p>
+```
+
+---
+
+## Arrastar movimentos
+
+Qualquer ação desencadeada por arrastar deve oferecer uma alternativa de ponteiro único (WCAG 2.5.7).
+
+```html
+<!-- ❌ Reordenar apenas arrastando -->
+<ul class="lista classificável" draggable="true">
+  <li>Item 1</li>
+  <li>Item 2</li>
+</ul>
+
+<!-- ✅ Alternativas de arrastar + botão -->
+<ul class="lista classificável">
+  <li>
+    <span>Item 1</span>
+    <button aria-label="Mover item 1 para cima">↑</button>
+    <button aria-label="Mover item 1 para baixo">↓</button>
+  </li>
+  <li>
+    <span>Item 2</span>
+    <button aria-label="Mover item 2 para cima">↑</button>
+    <button aria-label="Mover item 2 para baixo">↓</button>
+  </li>
+</ul>
+```
+
+Também se aplica a controles deslizantes, deslocamento de mapa, seletores de cores e widgets semelhantes baseados em arrastar – sempre forneça um clique/toque ou caminho de teclado equivalente.
+
+---
+
+## abas ARIA
+
+As guias requerem `role="tablist"`, `role="tab"` e `role="tabpanel"` com `aria-selected`, `aria-controls` adequados e suporte de teclado.
+
+```html
+<div role="tablist" aria-label="Informações do produto">
+  <button role="tab" id="tab-1" aria-selected="true"
+          aria-controls="panel-1">Descrição</button>
+  <button role="tab" id="tab-2" aria-selected="false"
+          aria-controls="panel-2" tabindex="-1">Comentários</button>
+</div>
+<div role="tabpanel" id="panel-1" aria-labelledby="tab-1">
+  <!-- Conteúdo do painel -->
+</div>
+<div role="tabpanel" id="panel-2" aria-labelledby="tab-2" oculto>
+  <!-- Conteúdo do painel -->
+</div>
+```
+
+As teclas de seta devem mover o foco entre as guias; a aba ativa recebe `tabindex="0"` enquanto as abas inativas usam `tabindex="-1"`.
+
+---
+
+## Regiões e notificações ativas
+
+Use `aria-live` para anunciar mudanças dinâmicas de conteúdo para leitores de tela sem mover o foco.
+
+```html
+<!-- Atualizações de status (educado — aguarda pausa na fala) -->
+<div aria-live="educado" aria-atomic="true" class="status">
+  <!-- Atualizações de conteúdo anunciadas para leitores de tela -->
+</div>
+
+<!-- Alertas urgentes (assertivos — interrupções) -->
+<div role="alert" aria-live="assertive">
+  <!-- Interrompe o anúncio atual -->
+</div>
+```
+
+```javascript
+function showNotification(mensagem, tipo = 'educado') {
+  const contêiner = document.getElementById(`${type}-announcer`);
+  container.textContent = '';
+  requestAnimationFrame(() => {
+    container.textContent = mensagem;
+  });
+}
+```
+
+Limpe o contêiner antes de escrever para garantir que a mesma mensagem acione um novo anúncio.
+
+---
+
+## Comandos do leitor de tela
+
+Referência rápida para os atalhos mais comuns do leitor de tela.
+
+| Ação | VozOver (Mac) | NVDA (Windows) |
+|--------|-----------------|----------------|
+| Iniciar/Parar | ⌘+F5 | Ctrl+Alt+N |
+| Próximo item | VO+ → | ↓ |
+| Ponto anterior | VO + ← | ↑ |
+| Ativar | VO + Espaço | Entrar |
+| Lista de títulos | VO + U, depois setas | H / Mudança + H |
+| Lista de links | VO + você | K / Mudança + K |

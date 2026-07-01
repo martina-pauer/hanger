@@ -643,3 +643,175 @@ python3 -m венв .venv
 ## Рекомендации по фиксации и запросу на извлечение
 
 В истории используются короткие, повелительные темы с заголовками, такие как «Исправить проверку входа в систему» или «Добавить загрузчик пользователя». Держите каждый коммит сосредоточенным. Запросы на включение должны объяснять проблему, основную причину, влияние на пользователя и выполненную проверку. Свяжите соответствующие проблемы и добавьте скриншоты изменений в раздел «pages/». Не смешивайте в PR сгенерированные файлы, учетные данные, локальные базы данных или несвязанные рефакторинги.
+# Linee guida per il repository
+
+## Struttura del progetto e organizzazione dei moduli
+
+Il codice dell'applicazione Python risiede in `src/hanger_app/`. `__init__.py` possiede la factory Flask, `routes.py` gestisce HTTP, `services.py` contiene casi d'uso e `repositories.py` isola SQLite. I file di schema con versione risiedono in `src/hanger_app/migrations/`; I modelli Jinja si trovano in `src/hanger_app/templates/`. `src/hanger.py` e `src/loader.py` sono punti di ingresso di compatibilità. I test si trovano in `tests/`. Le istruzioni dell'agente sono archiviate in `.agents/skills/`, con le versioni installate registrate in `skills-lock.json`.
+
+## Comandi di creazione, test e sviluppo
+
+Crea un ambiente isolato prima di installare le dipendenze:
+
+"bash."
+python3 -m venv .venv
+sorgente .venv/bin/activate
+pip installa poesia==2.2.1
+installazione poesia -E dev
+```
+
+Esegui l'applicazione principale dalla root del repository:
+
+"bash."
+poesia esegui flask --app hanger_app:create_app esegui --debug
+```
+
+Esegui "poetry run flask --app hanger_app:create_app process-jobs --watch" per elaborare le consegne in coda. Utilizzare `poetry run python -m compileall -q src tests` come controllo minimo della sintassi. Aggiungi le modifiche allo schema come un nuovo file numerato in `src/hanger_app/migrations/`; non riscrivere mai una migrazione applicata.
+
+Utilizza "poetry run flask --app hanger_app:create_app settings-list" e
+`settings-set <key> <json-value>` per gestire le impostazioni per installazione come
+"branding.nome_sito" o "idoneità.età_minima".
+Utilizza `schedule-interview`, `add-interview-note`, `list-interview-notes` e
+"ricerca-esportazione" per la pipeline dei colloqui dei candidati e la ricerca ripulita
+metriche.
+
+## Stile di codifica e convenzioni di denominazione
+
+Utilizza il rientro a quattro spazi e segui PEP 8. Denomina funzioni e variabili con `snake_case`, classi con `PascalCase` e costanti con `UPPER_SNAKE_CASE`. Aggiungi suggerimenti sul tipo ai metodi pubblici e instrada i valori restituiti. Mantenere piccoli i gestori di route Flask; sposta il comportamento riutilizzabile in `src/hanger_app/services.py`. Preferisci `pathlib.Path` e i percorsi relativi al repository anziché le posizioni codificate. Non interpolare mai l'input dell'utente in SQL o HTML.
+
+## Linee guida per i test
+
+Aggiungi nuovi test in `tests/`, rispecchiando il layout sorgente. Nomina i file `test_<module>.py` e le funzioni di test `test_<behavior>()`. Esegui `poetry run pytest -q --cov=hanger_app` e il controllo della compilazione prima dell'invio. Le modifiche al percorso dovrebbero riguardare richieste riuscite, autorizzazioni non riuscite, dati non validi e codici di stato previsti.
+
+## Linee guida per le richieste di commit e pull
+
+La cronologia utilizza argomenti brevi, imperativi, con lettere maiuscole, come "Correggi convalida accesso" o "Aggiungi caricatore utente". Mantieni ogni impegno concentrato. Le richieste pull devono spiegare il problema, la causa principale, l'impatto sull'utente e la convalida eseguita. Collega i problemi rilevanti e includi screenshot delle modifiche in "pagine/". Non mescolare file generati, credenziali, database locali o refactoring non correlati in una PR.
+# Linee guida per il repository
+
+## Struttura del progetto e organizzazione dei moduli
+
+Il codice dell'applicazione Python risiede in `src/hanger_app/`. `__init__.py` possiede la factory Flask, `routes.py` gestisce HTTP, `services.py` contiene casi d'uso e `repositories.py` isola SQLite. I file di schema con versione risiedono in `src/hanger_app/migrations/`; I modelli Jinja si trovano in `src/hanger_app/templates/`. `src/hanger.py` e `src/loader.py` sono punti di ingresso di compatibilità. I test si trovano in `tests/`. Le istruzioni dell'agente sono archiviate in `.agents/skills/`, con le versioni installate registrate in `skills-lock.json`.
+
+## Comandi di creazione, test e sviluppo
+
+Crea un ambiente isolato prima di installare le dipendenze:
+
+"bash."
+python3 -m venv .venv
+sorgente .venv/bin/activate
+pip installa poesia==2.2.1
+installazione poesia -E dev
+```
+
+Esegui l'applicazione principale dalla root del repository:
+
+"bash."
+poesia esegui flask --app hanger_app:create_app esegui --debug
+```
+
+Esegui "poetry run flask --app hanger_app:create_app process-jobs --watch" per elaborare le consegne in coda. Utilizzare `poetry run python -m compileall -q src tests` come controllo minimo della sintassi. Aggiungi le modifiche allo schema come un nuovo file numerato in `src/hanger_app/migrations/`; non riscrivere mai una migrazione applicata.
+
+Utilizza "poetry run flask --app hanger_app:create_app settings-list" e
+`settings-set <key> <json-value>` per gestire le impostazioni per installazione come
+"branding.nome_sito" o "idoneità.età_minima".
+Utilizza `schedule-interview`, `add-interview-note`, `list-interview-notes` e
+"ricerca-esportazione" per la pipeline dei colloqui dei candidati e la ricerca ripulita
+metriche.
+
+## Stile di codifica e convenzioni di denominazione
+
+Utilizza il rientro a quattro spazi e segui PEP 8. Denomina funzioni e variabili con `snake_case`, classi con `PascalCase` e costanti con `UPPER_SNAKE_CASE`. Aggiungi suggerimenti sul tipo ai metodi pubblici e instrada i valori restituiti. Mantenere piccoli i gestori di route Flask; sposta il comportamento riutilizzabile in `src/hanger_app/services.py`. Preferisci `pathlib.Path` e i percorsi relativi al repository anziché le posizioni codificate. Non interpolare mai l'input dell'utente in SQL o HTML.
+
+## Linee guida per i test
+
+Aggiungi nuovi test in `tests/`, rispecchiando il layout sorgente. Nomina i file `test_<module>.py` e le funzioni di test `test_<behavior>()`. Esegui `poetry run pytest -q --cov=hanger_app` e il controllo della compilazione prima dell'invio. Le modifiche al percorso dovrebbero riguardare richieste riuscite, autorizzazioni non riuscite, dati non validi e codici di stato previsti.
+
+## Linee guida per le richieste di commit e pull
+
+La cronologia utilizza argomenti brevi, imperativi, con lettere maiuscole, come "Correggi convalida accesso" o "Aggiungi caricatore utente". Mantieni ogni impegno concentrato. Le richieste pull devono spiegare il problema, la causa principale, l'impatto sull'utente e la convalida eseguita. Collega i problemi rilevanti e includi screenshot delle modifiche in "pagine/". Non mescolare file generati, credenziali, database locali o refactoring non correlati in una PR.
+# Diretrizes do Repositório
+
+## Estrutura do projeto e organização do módulo
+
+O código do aplicativo Python reside em `src/hanger_app/`. `__init__.py` possui a fábrica Flask, `routes.py` lida com HTTP, `services.py` contém casos de uso e `repositories.py` isola SQLite. Os arquivos de esquema versionados residem em `src/hanger_app/migrations/`; Os modelos Jinja ficam em `src/hanger_app/templates/`. `src/hanger.py` e `src/loader.py` são pontos de entrada de compatibilidade. Os testes ficam em `tests/`. As instruções do agente são armazenadas em `.agents/skills/`, com as versões instaladas registradas em `skills-lock.json`.
+
+## Comandos de construção, teste e desenvolvimento
+
+Crie um ambiente isolado antes de instalar dependências:
+
+```bash
+python3 -m venv.venv
+fonte .venv/bin/activate
+pip instalar poesia == 2.2.1
+instalação de poesia -E dev
+```
+
+Execute o aplicativo principal a partir da raiz do repositório:
+
+```bash
+poesia run flask --app hanger_app:create_app run --debug
+```
+
+Execute `poetry run flask --app hanger_app:create_app process-jobs --watch` para processar entregas na fila. Use `poetry run python -m compileall -q src testes` como verificação de sintaxe mínima. Adicione alterações de esquema como um novo arquivo numerado em `src/hanger_app/migrations/`; nunca reescreva uma migração aplicada.
+
+Use `poetry run flask --app hanger_app:create_app settings-list` e
+`settings-set <key> <json-value>` para gerenciar configurações por instalação, como
+`branding.site_name` ou `eligibility.minimum_age`.
+Use `agendar-entrevista`, `adicionar-nota-entrevista`, `listar-notas-entrevista` e
+`pesquisa-exportação` para o pipeline de entrevistas do candidato e pesquisa higienizada
+métricas.
+
+## Estilo de codificação e convenções de nomenclatura
+
+Use recuo de quatro espaços e siga o PEP 8. Nomeie funções e variáveis com `snake_case`, classes com `PascalCase` e constantes com `UPPER_SNAKE_CASE`. Adicione dicas de tipo a métodos públicos e valores de retorno de rota. Mantenha os manipuladores de rota do Flask pequenos; mova o comportamento reutilizável para `src/hanger_app/services.py`. Prefira `pathlib.Path` e caminhos relativos ao repositório em vez de locais codificados. Nunca interpole a entrada do usuário em SQL ou HTML.
+
+## Diretrizes de teste
+
+Adicione novos testes em `tests/`, espelhando o layout de origem. Nomeie os arquivos `test_<module>.py` e teste as funções `test_<behavior>()`. Execute `poetry run pytest -q --cov=hanger_app` e a verificação de compilação antes de enviar. As alterações de rota devem abranger solicitações bem-sucedidas, falhas de autorização, dados inválidos e códigos de status esperados.
+
+## Diretrizes de solicitação de confirmação e pull
+
+O histórico usa assuntos curtos e imperativos com títulos, como `Fix Login Validation` ou `Add User Loader`. Mantenha cada commit focado. As solicitações pull devem explicar o problema, a causa raiz, o impacto do usuário e a validação realizada. Vincule questões relevantes e inclua capturas de tela para alterações em `páginas/`. Não misture arquivos gerados, credenciais, bancos de dados locais ou refatoradores não relacionados em um PR.
+# Diretrizes do Repositório
+
+## Estrutura do projeto e organização do módulo
+
+O código do aplicativo Python reside em `src/hanger_app/`. `__init__.py` possui a fábrica Flask, `routes.py` lida com HTTP, `services.py` contém casos de uso e `repositories.py` isola SQLite. Os arquivos de esquema versionados residem em `src/hanger_app/migrations/`; Os modelos Jinja ficam em `src/hanger_app/templates/`. `src/hanger.py` e `src/loader.py` são pontos de entrada de compatibilidade. Os testes ficam em `tests/`. As instruções do agente são armazenadas em `.agents/skills/`, com as versões instaladas registradas em `skills-lock.json`.
+
+## Comandos de construção, teste e desenvolvimento
+
+Crie um ambiente isolado antes de instalar dependências:
+
+```bash
+python3 -m venv.venv
+fonte .venv/bin/activate
+pip instalar poesia == 2.2.1
+instalação de poesia -E dev
+```
+
+Execute o aplicativo principal a partir da raiz do repositório:
+
+```bash
+poesia run flask --app hanger_app:create_app run --debug
+```
+
+Execute `poetry run flask --app hanger_app:create_app process-jobs --watch` para processar entregas na fila. Use `poetry run python -m compileall -q src testes` como verificação de sintaxe mínima. Adicione alterações de esquema como um novo arquivo numerado em `src/hanger_app/migrations/`; nunca reescreva uma migração aplicada.
+
+Use `poetry run flask --app hanger_app:create_app settings-list` e
+`settings-set <key> <json-value>` para gerenciar configurações por instalação, como
+`branding.site_name` ou `eligibility.minimum_age`.
+Use `agendar-entrevista`, `adicionar-nota-entrevista`, `listar-notas-entrevista` e
+`pesquisa-exportação` para o pipeline de entrevistas do candidato e pesquisa higienizada
+métricas.
+
+## Estilo de codificação e convenções de nomenclatura
+
+Use recuo de quatro espaços e siga o PEP 8. Nomeie funções e variáveis com `snake_case`, classes com `PascalCase` e constantes com `UPPER_SNAKE_CASE`. Adicione dicas de tipo a métodos públicos e valores de retorno de rota. Mantenha os manipuladores de rota do Flask pequenos; mova o comportamento reutilizável para `src/hanger_app/services.py`. Prefira `pathlib.Path` e caminhos relativos ao repositório em vez de locais codificados. Nunca interpole a entrada do usuário em SQL ou HTML.
+
+## Diretrizes de teste
+
+Adicione novos testes em `tests/`, espelhando o layout de origem. Nomeie os arquivos `test_<module>.py` e teste as funções `test_<behavior>()`. Execute `poetry run pytest -q --cov=hanger_app` e a verificação de compilação antes de enviar. As alterações de rota devem abranger solicitações bem-sucedidas, falhas de autorização, dados inválidos e códigos de status esperados.
+
+## Diretrizes de solicitação de confirmação e pull
+
+O histórico usa assuntos curtos e imperativos com títulos, como `Fix Login Validation` ou `Add User Loader`. Mantenha cada commit focado. As solicitações pull devem explicar o problema, a causa raiz, o impacto do usuário e a validação realizada. Vincule questões relevantes e inclua capturas de tela para alterações em `páginas/`. Não misture arquivos gerados, credenciais, bancos de dados locais ou refatoradores não relacionados em um PR.

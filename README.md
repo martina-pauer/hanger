@@ -698,3 +698,254 @@ flask запуска поэзии --app Hanger_app:create_app settings-set eligi
 `eligibility.allowed_contact_kinds` и `eligibility.application_prompt`.
 
 Команды рабочего процесса собеседования позволяют администраторам планировать собеседования с кандидатами, назначенные
+# Вешалка
+
+Hanger — это социальное приложение для собеседований, созданное с помощью Flask. Он включает в себя
+регистрация, вход, восстановление пароля, постоянные приглашения, обмен сообщениями,
+публикации, проверенные загрузки изображений и очередь доставки с возможностью повторной попытки.
+
+## Локальная настройка
+
+``` баш
+python3 -m венв .venv
+источник .venv/bin/activate
+пип установить поэзию == 2.2.1
+установка поэзии -E dev
+поэзия запустить колбу --app Hanger_app:create_app запустить --debug
+```
+
+Данные разработки хранятся в папке `instance/`. Производство требует
+`HANGER_SECRET_KEY`, `HANGER_DB_PATH`, `HANGER_UPLOAD_DIR`,
+HANGER_PUBLIC_URL, HANGER_REQUIRE_INVITATION и
+`HANGER_MAX_UPLOAD_BYTES`. Перед этим настройте учетные данные SMTP или Twilio.
+обработка заказов на доставку. SQLite и загруженные файлы должны находиться в одном и том же месте.
+постоянный объем; этот профиль развертывания предназначен для одного приложения
+хозяин.
+
+``` баш
+поэзия запустить колбу --app Hanger_app:create_app db-upgrade
+поэзия запустить колбу --app Hanger_app:create_app create-admin
+поэзия запустить колбу --app Hanger_app:create_app процесс-задания --watch
+поэзия запускает колбу --app Hanger_app:create_app settings-list
+flask запуска поэзии --app Hanger_app:create_app settings-set eligibility.minimum_age 21
+поэзия запускает колбу --app Hanger_app:create_app Schedule-Interview 1
+поэзия запускает колбу --app Hanger_app:create_app add-interview-note 1
+поэзия запускает колбу --app Hanger_app:create_app Research-Export
+поэзия запустить pytest -q
+поэзия беги ерш проверка src тесты
+```
+
+Изменения схемы хранятся в пронумерованных файлах SQL в папке `src/hanger_app/migrations/`.
+Разработка применяет их автоматически; производство должно запустить `db-upgrade` один раз, прежде чем веб-версия
+рабочие начинают. Создайте включенный файл Dockerfile для развертывания Gunicorn. Здоровье
+проверки доступны в каталогах `/health/live` и `/health/ready`.
+
+Настройки для каждой установки хранятся в SQLite и управляются с помощью
+Команды CLI `settings-list`, `settings-get` и `settings-set`. Поддерживается
+настройки включают `branding.site_name`, `branding.support_contact`,
+`branding.logo_url`, `eligibility.minimum_age`,
+`eligibility.allowed_contact_kinds` и `eligibility.application_prompt`.
+
+Команды рабочего процесса собеседования позволяют администраторам планировать собеседования с кандидатами, назначенные
+интервьюеры записывают структурированные заметки, а сопровождающие экспортируют совокупные результаты исследований.
+метрики без раскрытия текста личной заметки по умолчанию.
+# Appendiabiti
+
+Hanger è un'applicazione social basata su interviste creata con Flask. Include
+registrazione, accesso, recupero password, inviti persistenti, messaggistica,
+post, caricamenti di immagini convalidati e una coda di consegna riprovabile.
+
+## Configurazione locale
+
+"bash."
+python3 -m venv .venv
+sorgente .venv/bin/activate
+pip installa poesia==2.2.1
+installazione poesia -E dev
+poesia esegui flask --app hanger_app:create_app esegui --debug
+```
+
+I dati di sviluppo sono archiviati in "istanza/". La produzione richiede
+`HANGER_SECRET_KEY`, `HANGER_DB_PATH`, `HANGER_UPLOAD_DIR`,
+"HANGER_PUBLIC_URL", "HANGER_REQUIRE_INVITATION" e
+"HANGER_MAX_UPLOAD_BYTES". Configurare prima le credenziali SMTP o Twilio
+elaborazione dei lavori di consegna. SQLite e i file caricati devono risiedere sullo stesso
+volume persistente; questo profilo di distribuzione è destinato a una singola applicazione
+ospite.
+
+"bash."
+poesia esegui fiaschetta --app hanger_app:create_app db-upgrade
+poesia esegui fiaschetta --app hanger_app:create_app create-admin
+fiaschetta di esecuzione della poesia --app hanger_app:create_app process-jobs --watch
+poesia esegui flask --app hanger_app:create_app settings-list
+pallone da corsa di poesia --app hanger_app:create_app settings-set eligibility.minimum_age 21
+fiaschetta per esecuzione poesia --app hanger_app:create_app pianificazione-intervista 1
+fiaschetta per esecuzione poesia --app hanger_app:create_app add-interview-note 1
+poesia esegui fiaschetta --app hanger_app:create_app ricerca-esportazione
+corsa di poesie pytest -q
+poesia esegui test ruff check src
+```
+
+Le modifiche allo schema appartengono ai file SQL numerati in "src/hanger_app/migrations/".
+Lo sviluppo li applica automaticamente; la produzione deve eseguire "db-upgrade" una volta prima di web
+iniziano i lavoratori. Crea il `Dockerfile` incluso per la distribuzione di Gunicorn. Salute
+i controlli sono disponibili in "/health/live" e "/health/ready".
+
+Le impostazioni per installazione vengono archiviate in SQLite e gestite con il file
+Comandi CLI "settings-list", "settings-get" e "settings-set". Supportato
+le impostazioni includono `branding.site_name`, `branding.support_contact`,
+`branding.logo_url`, `eligibility.minimum_age`,
+"eligibility.allowed_contact_kinds" e "eligibility.application_prompt".
+
+I comandi del flusso di lavoro del colloquio consentono agli amministratori di pianificare i colloqui dei candidati, assegnati
+# Appendiabiti
+
+Hanger è un'applicazione social basata su interviste creata con Flask. Include
+registrazione, accesso, recupero password, inviti persistenti, messaggistica,
+post, caricamenti di immagini convalidati e una coda di consegna riprovabile.
+
+## Configurazione locale
+
+"bash."
+python3 -m venv .venv
+sorgente .venv/bin/activate
+pip installa poesia==2.2.1
+installazione poesia -E dev
+poesia esegui flask --app hanger_app:create_app esegui --debug
+```
+
+I dati di sviluppo sono archiviati in "istanza/". La produzione richiede
+`HANGER_SECRET_KEY`, `HANGER_DB_PATH`, `HANGER_UPLOAD_DIR`,
+"HANGER_PUBLIC_URL", "HANGER_REQUIRE_INVITATION" e
+"HANGER_MAX_UPLOAD_BYTES". Configurare prima le credenziali SMTP o Twilio
+elaborazione dei lavori di consegna. SQLite e i file caricati devono risiedere sullo stesso
+volume persistente; questo profilo di distribuzione è destinato a una singola applicazione
+ospite.
+
+"bash."
+poesia esegui fiaschetta --app hanger_app:create_app db-upgrade
+poesia esegui fiaschetta --app hanger_app:create_app create-admin
+fiaschetta di esecuzione della poesia --app hanger_app:create_app process-jobs --watch
+poesia esegui flask --app hanger_app:create_app settings-list
+pallone da corsa di poesia --app hanger_app:create_app settings-set eligibility.minimum_age 21
+fiaschetta per esecuzione poesia --app hanger_app:create_app pianificazione-intervista 1
+fiaschetta per esecuzione poesia --app hanger_app:create_app add-interview-note 1
+poesia esegui fiaschetta --app hanger_app:create_app ricerca-esportazione
+corsa di poesie pytest -q
+poesia esegui test ruff check src
+```
+
+Le modifiche allo schema appartengono ai file SQL numerati in "src/hanger_app/migrations/".
+Lo sviluppo li applica automaticamente; la produzione deve eseguire "db-upgrade" una volta prima di web
+iniziano i lavoratori. Crea il `Dockerfile` incluso per la distribuzione di Gunicorn. Salute
+i controlli sono disponibili in "/health/live" e "/health/ready".
+
+Le impostazioni per installazione vengono archiviate in SQLite e gestite con il file
+Comandi CLI "settings-list", "settings-get" e "settings-set". Supportato
+le impostazioni includono `branding.site_name`, `branding.support_contact`,
+`branding.logo_url`, `eligibility.minimum_age`,
+"eligibility.allowed_contact_kinds" e "eligibility.application_prompt".
+
+I comandi del flusso di lavoro del colloquio consentono agli amministratori di pianificare i colloqui dei candidati, assegnati
+gli intervistatori registrano note strutturate e i manutentori esportano la ricerca aggregata
+metriche senza esporre il testo della nota privata per impostazione predefinita.
+# Cabide
+
+Hanger é um aplicativo social fechado para entrevistas desenvolvido com Flask. Inclui
+registro, login, recuperação de senha, convites persistentes, mensagens,
+postagens, uploads de imagens validados e uma fila de entrega repetível.
+
+## Configuração local
+
+```bash
+python3 -m venv.venv
+fonte .venv/bin/activate
+pip instalar poesia == 2.2.1
+instalação de poesia -E dev
+poesia run flask --app hanger_app:create_app run --debug
+```
+
+Os dados de desenvolvimento são armazenados em `instance/`. A produção requer
+`HANGER_SECRET_KEY`, `HANGER_DB_PATH`, `HANGER_UPLOAD_DIR`,
+`HANGER_PUBLIC_URL`, `HANGER_REQUIRE_INVITATION` e
+`HANGER_MAX_UPLOAD_BYTES`. Configure credenciais SMTP ou Twilio antes
+processando trabalhos de entrega. SQLite e arquivos enviados devem residir no mesmo
+volume persistente; este perfil de implantação destina-se a um único aplicativo
+anfitrião.
+
+```bash
+frasco de execução de poesia --app hanger_app:create_app db-upgrade
+frasco de execução de poesia --app hanger_app:create_app create-admin
+poesia executar balão --app hanger_app:create_app process-jobs --watch
+frasco de execução de poesia --app hanger_app:create_app settings-list
+poesia run flask --app hanger_app:create_app settings-set eligibility.minimum_age 21
+frasco de execução de poesia --app hanger_app:create_app agenda-entrevista 1
+frasco de execução de poesia --app hanger_app:create_app add-interview-note 1
+frasco de execução de poesia --app hanger_app:create_app research-export
+poesia execute pytest -q
+poesia executar ruff verificar testes src
+```
+
+As alterações de esquema pertencem a arquivos SQL numerados em `src/hanger_app/migrations/`.
+O desenvolvimento os aplica automaticamente; a produção deve executar `db-upgrade` uma vez antes da web
+os trabalhadores começam. Construa o `Dockerfile` incluído para implantação do Gunicorn. Saúde
+verificações estão disponíveis em `/health/live` e `/health/ready`.
+
+As configurações por instalação são armazenadas no SQLite e gerenciadas com o
+Comandos CLI `settings-list`, `settings-get` e `settings-set`. Suportado
+as configurações incluem `branding.site_name`, `branding.support_contact`,
+`branding.logo_url`, `eligibilidade.idade_mínima`,
+`eligibility.allowed_contact_kinds` e `eligibility.application_prompt`.
+
+Os comandos do fluxo de trabalho de entrevista permitem que os administradores agendem entrevistas com candidatos, atribuídas
+# Cabide
+
+Hanger é um aplicativo social fechado para entrevistas desenvolvido com Flask. Inclui
+registro, login, recuperação de senha, convites persistentes, mensagens,
+postagens, uploads de imagens validados e uma fila de entrega repetível.
+
+## Configuração local
+
+```bash
+python3 -m venv.venv
+fonte .venv/bin/activate
+pip instalar poesia == 2.2.1
+instalação de poesia -E dev
+poesia run flask --app hanger_app:create_app run --debug
+```
+
+Os dados de desenvolvimento são armazenados em `instance/`. A produção requer
+`HANGER_SECRET_KEY`, `HANGER_DB_PATH`, `HANGER_UPLOAD_DIR`,
+`HANGER_PUBLIC_URL`, `HANGER_REQUIRE_INVITATION` e
+`HANGER_MAX_UPLOAD_BYTES`. Configure credenciais SMTP ou Twilio antes
+processando trabalhos de entrega. SQLite e arquivos enviados devem residir no mesmo
+volume persistente; este perfil de implantação destina-se a um único aplicativo
+anfitrião.
+
+```bash
+frasco de execução de poesia --app hanger_app:create_app db-upgrade
+frasco de execução de poesia --app hanger_app:create_app create-admin
+poesia executar balão --app hanger_app:create_app process-jobs --watch
+frasco de execução de poesia --app hanger_app:create_app settings-list
+poesia run flask --app hanger_app:create_app settings-set eligibility.minimum_age 21
+frasco de execução de poesia --app hanger_app:create_app agenda-entrevista 1
+frasco de execução de poesia --app hanger_app:create_app add-interview-note 1
+frasco de execução de poesia --app hanger_app:create_app research-export
+poesia execute pytest -q
+poesia executar ruff verificar testes src
+```
+
+As alterações de esquema pertencem a arquivos SQL numerados em `src/hanger_app/migrations/`.
+O desenvolvimento os aplica automaticamente; a produção deve executar `db-upgrade` uma vez antes da web
+os trabalhadores começam. Construa o `Dockerfile` incluído para implantação do Gunicorn. Saúde
+verificações estão disponíveis em `/health/live` e `/health/ready`.
+
+As configurações por instalação são armazenadas no SQLite e gerenciadas com o
+Comandos CLI `settings-list`, `settings-get` e `settings-set`. Suportado
+as configurações incluem `branding.site_name`, `branding.support_contact`,
+`branding.logo_url`, `eligibilidade.idade_mínima`,
+`eligibility.allowed_contact_kinds` e `eligibility.application_prompt`.
+
+Os comandos do fluxo de trabalho de entrevista permitem que os administradores agendem entrevistas com candidatos, atribuídas
+os entrevistadores registram notas estruturadas e os mantenedores exportam pesquisas agregadas
+métricas sem expor o texto da nota privada por padrão.
