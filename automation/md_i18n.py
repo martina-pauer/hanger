@@ -47,7 +47,7 @@ class Documents:
             translated: str = self.content.replace('[EN]', '')
             translated: str = asyncio.run(GoogleTranslation(translated, code))
             # Add Translation To File
-            translator.write(f'# [{code}] {translated}')
+            translator.write(f'\n[{code}] {translated}')
             translator.close()
             # Clean Memory
             del translated
