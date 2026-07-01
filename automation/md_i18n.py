@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import asyncio
+import os
 from googletrans import Translator
 # Translate all the Markdown in the folder and sub-folders to language
 root_folder: str = '/workspaces/hanger/'
@@ -30,12 +31,12 @@ class Documents:
         # Only Save Content for Data Encapsulation to protect files
         self.content: str = ''
         
-        with open(file_path, 'r') as doc:
+        with open(os.path.abspath(file_path), 'r') as doc:
             for line in range(first_line, last_line + 1):
                 self.content += doc.readline()
             doc.close()
         
-        self.doc_path: str = file_path
+        self.doc_path: str = os.path.abspath(file_path)
 
     def translation(self, code: str):
         '''
@@ -44,30 +45,28 @@ class Documents:
         '''
         with open(self.doc_path, 'a') as translator:
             # Make Translation
-            translated: str = self.content.replace('[EN]', '')
+            translated: str = self.content.replace('[EN]', f'[{code}]')
             translated: str = asyncio.run(GoogleTranslation(translated, code))
             # Add Translation To File
-            translator.write(f'\n[{code}] {translated}')
+            translator.write(f'\n{translated}')
             translator.close()
             # Clean Memory
             del translated
 
 if __name__ == '__main__':
-    import os
-
-    os.system(f'cd {root_folder}')
+    os.system(f'cd {os.path.abspath(root_folder)}')
     
-    technical = Documents(f'{root_folder}/TECHNICAL_ROADMAP.md', 1, 97)
+    technical = Documents(f"{os.path.abspath('TECHNICAL_ROADMAP.md')}", 1, 97)
 
-    roadmap = Documents(f'{root_folder}/ROADMAP.md', 1, 5)
+    roadmap = Documents(f"{os.path.abspath('ROADMAP.md')}", 1, 5)
 
-    readme = Documents(f'{root_folder}/README.md', 3, 51)
+    readme = Documents(f"{os.path.abspath('README.md')}", 3, 51)
 
-    agent = Documents(f'{root_folder}/AGENTS.md', 1, 43)
+    agent = Documents(f"{os.path.abspath('AGENTS.md')}", 1, 43)
 
     md_list: list[str] =   [technical, roadmap, readme, agent]
     # Get files in sub-folders (Only md)
-    dirs: list[str] = os.listdir(f'{root_folder}')
+    dirs: list[str] = os.listdir(f'{os.path.abspath(root_folder)}')
 
     def get_files(folder: str):
         '''
@@ -80,34 +79,43 @@ if __name__ == '__main__':
             # Level 1
             if os.path.isdir(file_name):
                 # Iterative Case: is Directory
-                dirs_1 = os.listdir(file_name)
-                if (not dirs.__contains__(dirs_1[0])):
-                    dirs.__add__(dirs_1)
+                dirs_1 = os.listdir(os.path.abspath(file_name))
+                dirs.__add__(dirs_1)
                 for names_1 in dirs_1:
                     # Level 2
-                    dirs_2 = os.listdir(names_1)
-                    if (not dirs.__contains__(dirs_2[0])):
-                        dirs.__add__(dirs_2)
-                    for names_2 in dirs_2:
-                        # Level 3
-                        dirs_3 = os.listdir(names_2)
-                        if (not dirs.__contains__(dirs_3[0])):
-                            dirs.__add__(dirs_3)
-                        for names_3 in dirs_3:
-                            # Level 4
-                            dirs_4 = os.listdir(names_3)
-                            if (not dirs.__contains__(dirs_4[0])):
-                                dirs.__add__(dirs_4)
-                            for names_4 in dirs_4:
-                                # Level 5
-                                dirs_5 = os.listdir(names_4)
-                                if (not dirs.__contains__(dirs_5[0])):
-                                    dirs.__add__(dirs_5)    
-                        
-            elif (file_name.__contains__('.md') and (not md_list.__contains__(file_name))):
+                    if (names_1.__contains__('.md') and (not os.path.isdir(f'{os.path.abspath(f'{file_name}/{names_1}')}')) and (not md_list.__contains__(names_1))):
+                        md_list.append(Documents(f'{file_name}/{names_1}', 1, 440))
+                    elif os.path.isdir(f'{file_name}'):
+                        if os.path.isdir(os.path.abspath(f'{file_name}/{names_1}')):
+                            dirs_2 = os.listdir(os.path.abspath(f'{file_name}/{names_1}'))
+                            dirs.__add__(dirs_2)
+                            for names_2 in dirs_2:
+                                # Level 3
+                                if (names_2.__contains__('.md') and (not os.path.isdir(f'{file_name}/{names_1}/{names_2}')) and (not md_list.__contains__(names_2))):
+                                    md_list.append(Documents(f'{file_name}/{names_1}/{names_2}', 1, 440))
+                                elif os.path.isdir(os.path.abspath(f'{file_name}/{names_1}/{names_2}')):    
+                                    dirs_3 = os.listdir(os.path.abspath(f'{file_name}/{names_1}/{names_2}'))
+                                    dirs.__add__(dirs_3)
+                                    for names_3 in dirs_3:
+                                        # Level 4
+                                        if (names_3.__contains__('.md') and (not os.path.isdir(f'{os.path.abspath(f'{file_name}/{names_1}/{names_2}/{names_3}')}')) and (not md_list.__contains__(names_3))):
+                                            md_list.append(Documents(f'{os.path.abspath(f'{file_name}/{names_1}/{names_2}/{names_3}')}', 1, 440))                    
+                                        elif os.path.isdir(os.path.abspath(f'{file_name}/{names_1}/{names_2}/{names_3}')):    
+                                            dirs_4 = os.listdir(os.path.abspath(f'{file_name}/{names_1}/{names_2}/{names_3}'))
+                                            dirs.__add__(dirs_4)
+                                            for names_4 in dirs_4:
+                                                # Level 5
+                                                if (names_4.__contains__('.md') and (not os.path.isdir(f'{os.path.abspath(f'{file_name}/{names_1}/{names_2}/{names_3}/{names_4}')}')) and (not md_list.__contains__(names_4))):
+                                                    md_list.append(Documents(f'{os.path.abspath(f'{file_name}/{names_1}/{names_2}/{names_3}/{names_4}')}', 1, 440))                    
+                                                elif os.path.isdir(os.path.abspath(f'{file_name}/{names_1}/{names_2}/{names_3}/{names_4}')):    
+                                                    dirs_5 = os.listdir(os.path.abspath(f'{file_name}/{names_1}/{names_2}/{names_3}/{names_4}'))
+                                                    dirs.__add__(dirs_5)  
+                                                    
+            elif (file_name.__contains__('.md') and (not os.path.isdir(f'{os.path.abspath(file_name)}')) and (not md_list.__contains__(file_name))):
                 # Only Add New Files: Base Case, is a file
-                md_list.append(f'{folder}/{file_name}')
-             
+                md_list.append(Documents(f'{os.path.abspath(file_name)}', 1, 440))
+    # Detect All The Markdown Files Before Translate Them            
+    get_files(root_folder)         
     # Add Translation for each content in respective file
     for language in lang_codes:
         for content in md_list:
