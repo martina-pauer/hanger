@@ -107,12 +107,19 @@ class UserRepository:
             row = connection.execute(
                 """
                 SELECT id, username, password_hash, age, contact_kind,
-                       contact_address, role
+                       contact_address, role, last_login_at
                 FROM users WHERE username = ?
                 """,
                 (username,),
             ).fetchone()
         return User(**dict(row)) if row else None
+
+    def record_login(self, username: str, now: int) -> None:
+        with self.database.transaction() as connection:
+            connection.execute(
+                "UPDATE users SET last_login_at = ? WHERE username = ?",
+                (now, username),
+            )
 
     def queue_recovery(
         self,
@@ -666,31 +673,11 @@ class OperationalReportRepository:
             ).fetchone()
             active_users = connection.execute(
                 """
-                SELECT COUNT(DISTINCT user_id) AS total
-                FROM (
-                    SELECT sender_id AS user_id FROM messages WHERE created_at >= ?
-                    UNION
-                    SELECT receiver_id AS user_id FROM messages WHERE created_at >= ?
-                    UNION
-                    SELECT author_id AS user_id FROM posts WHERE created_at >= ?
-                    UNION
-                    SELECT author_id AS user_id FROM comments WHERE created_at >= ?
-                    UNION
-                    SELECT user_id FROM post_likes WHERE created_at >= ?
-                    UNION
-                    SELECT actor_id AS user_id
-                    FROM audit_log
-                    WHERE created_at >= ? AND actor_id IS NOT NULL
-                )
+                SELECT COUNT(*) AS total
+                FROM users
+                WHERE last_login_at >= ?
                 """,
-                (
-                    active_cutoff,
-                    active_cutoff,
-                    active_cutoff,
-                    active_cutoff,
-                    active_cutoff,
-                    active_cutoff,
-                ),
+                (active_cutoff,),
             ).fetchone()
             application_statuses = connection.execute(
                 """
@@ -855,6 +842,96 @@ class OperationalReportRepository:
                 ),
             },
             "audit_events": audit_events["total"] or 0,
+        }
+
+    def cleanup_retention(
+        self,
+        apply: bool = False,
+        now: Optional[int] = None,
+        closed_application_days: int = 90,
+        interview_note_days: int = 180,
+    ) -> dict:
+        timestamp = int(time.time()) if now is None else now
+        old_application_cutoff = timestamp - closed_application_days * 24 * 60 * 60
+        old_note_cutoff = timestamp - interview_note_days * 24 * 60 * 60
+        with self.database.transaction(immediate=apply) as connection:
+            counts = {
+                "old_closed_applications": connection.execute(
+                    """
+                    SELECT COUNT(*) AS total
+                    FROM applications
+                    WHERE status IN ('rejected', 'invited')
+                        AND updated_at < ?
+                    """,
+                    (old_application_cutoff,),
+                ).fetchone()["total"],
+                "old_interview_notes": connection.execute(
+                    """
+                    SELECT COUNT(*) AS total
+                    FROM interview_notes
+                    WHERE created_at < ?
+                    """,
+                    (old_note_cutoff,),
+                ).fetchone()["total"],
+                "expired_recovery_tokens": connection.execute(
+                    """
+                    SELECT COUNT(*) AS total
+                    FROM users
+                    WHERE recovery_token_hash IS NOT NULL
+                        AND recovery_expires < ?
+                    """,
+                    (timestamp,),
+                ).fetchone()["total"],
+                "expired_unused_invitations": connection.execute(
+                    """
+                    SELECT COUNT(*) AS total
+                    FROM invitations
+                    WHERE used_at IS NULL
+                        AND expires_at IS NOT NULL
+                        AND expires_at < ?
+                    """,
+                    (timestamp,),
+                ).fetchone()["total"],
+            }
+            if apply:
+                connection.execute(
+                    """
+                    DELETE FROM interview_notes
+                    WHERE created_at < ?
+                    """,
+                    (old_note_cutoff,),
+                )
+                connection.execute(
+                    """
+                    DELETE FROM applications
+                    WHERE status IN ('rejected', 'invited')
+                        AND updated_at < ?
+                    """,
+                    (old_application_cutoff,),
+                )
+                connection.execute(
+                    """
+                    UPDATE users
+                    SET recovery_token_hash = NULL, recovery_expires = NULL
+                    WHERE recovery_token_hash IS NOT NULL
+                        AND recovery_expires < ?
+                    """,
+                    (timestamp,),
+                )
+                connection.execute(
+                    """
+                    DELETE FROM invitations
+                    WHERE used_at IS NULL
+                        AND expires_at IS NOT NULL
+                        AND expires_at < ?
+                    """,
+                    (timestamp,),
+                )
+        return {
+            "mode": "apply" if apply else "dry-run",
+            "closed_application_days": closed_application_days,
+            "interview_note_days": interview_note_days,
+            "counts": counts,
         }
 
 

@@ -68,7 +68,7 @@ def test_migrations_are_idempotent(app):
         applied = connection.execute(
             "SELECT COUNT(*) FROM schema_migrations"
         ).fetchone()[0]
-    assert applied == 5
+    assert applied == 6
 
 
 def test_operational_cli_commands(app):
@@ -90,6 +90,8 @@ def test_operational_cli_commands(app):
     assert app.extensions["hanger"]["users"].get("operator").role == "user"
     assert runner.invoke(args=["db-upgrade"]).exit_code == 0
     assert runner.invoke(args=["process-jobs", "--limit", "1"]).exit_code == 0
+    assert runner.invoke(args=["operations-report"]).exit_code == 0
+    assert runner.invoke(args=["retention-cleanup"]).exit_code == 0
 
 
 def test_operations_report_is_sanitized_and_counts_operational_health(app):
@@ -149,6 +151,74 @@ def test_operations_report_is_sanitized_and_counts_operational_health(app):
     assert "private interview note" not in serialized
     assert "secret-token" not in serialized
     assert "private provider error" not in serialized
+
+
+def test_retention_cleanup_defaults_to_dry_run_and_apply_cleans_expired_data(app):
+    services = app.extensions["hanger"]
+    assert services["auth"].register("admin", "SecureAdmin1!", role="admin")
+    application, created = services["applications"].submit(
+        "candidate",
+        "candidate@example.com",
+        "email",
+    )
+    assert created
+    assert application is not None
+    assert services["applications"].reject(application.id, "admin", "not now")
+    assert services["invitations"].invite(
+        "expired@example.com",
+        "email",
+        "http://test.local/register",
+        ttl_seconds=-1,
+    )
+    with services["database"].transaction() as connection:
+        connection.execute(
+            "UPDATE applications SET updated_at = 1 WHERE id = ?",
+            (application.id,),
+        )
+        connection.execute(
+            """
+            INSERT INTO interview_notes
+                (application_id, author_id, category, content, created_at)
+            SELECT ?, id, 'fit', 'old private note', 1
+            FROM users
+            WHERE username = 'admin'
+            """,
+            (application.id,),
+        )
+        connection.execute(
+            """
+            UPDATE users
+            SET recovery_token_hash = 'expired-secret', recovery_expires = 1
+            WHERE username = 'admin'
+            """
+        )
+
+    runner = app.test_cli_runner()
+    dry_run = runner.invoke(args=["retention-cleanup"])
+    assert dry_run.exit_code == 0
+    dry_run_result = json.loads(dry_run.output)
+    assert dry_run_result["mode"] == "dry-run"
+    assert dry_run_result["counts"]["old_closed_applications"] == 1
+    assert services["application_repository"].get(application.id) is not None
+
+    applied = runner.invoke(args=["retention-cleanup", "--apply"])
+    assert applied.exit_code == 0
+    applied_result = json.loads(applied.output)
+    assert applied_result["mode"] == "apply"
+    assert applied_result["counts"]["old_closed_applications"] == 1
+    assert services["application_repository"].get(application.id) is None
+    with services["database"].transaction() as connection:
+        assert (
+            connection.execute("SELECT COUNT(*) FROM interview_notes").fetchone()[0]
+            == 0
+        )
+        assert (
+            connection.execute(
+                "SELECT recovery_token_hash FROM users WHERE username = 'admin'"
+            ).fetchone()[0]
+            is None
+        )
+        assert connection.execute("SELECT COUNT(*) FROM invitations").fetchone()[0] == 0
 
 
 def test_installation_settings_defaults_and_cli(app):

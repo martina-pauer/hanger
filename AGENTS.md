@@ -33,7 +33,8 @@ migrations and `process-jobs --watch` to process queued deliveries. Use
 per-installation settings. Use `submit-application`, `review-applications`,
 `schedule-interview`, `add-interview-note`, `research-export`, and
 `operations-report` for onboarding, interview, research, and operational
-workflows.
+workflows. Use `retention-cleanup` first as a dry-run; add `--apply` only after
+reviewing the counts.
 
 ## Coding Style & Naming Conventions
 

@@ -339,6 +339,30 @@ def create_app(test_config: Optional[dict] = None) -> Flask:
     def operations_report() -> None:
         click.echo(json_dumps(operational_reports.summary()))
 
+    @app.cli.command("retention-cleanup")
+    @click.option(
+        "--apply",
+        "apply_changes",
+        is_flag=True,
+        help="Delete or clear expired records. Defaults to dry-run.",
+    )
+    @click.option("--closed-application-days", default=90, type=int, show_default=True)
+    @click.option("--interview-note-days", default=180, type=int, show_default=True)
+    def retention_cleanup(
+        apply_changes: bool,
+        closed_application_days: int,
+        interview_note_days: int,
+    ) -> None:
+        try:
+            result = operational_reports.cleanup_retention(
+                apply=apply_changes,
+                closed_application_days=closed_application_days,
+                interview_note_days=interview_note_days,
+            )
+        except ValueError as error:
+            raise click.ClickException(str(error)) from error
+        click.echo(json_dumps(result))
+
     @app.cli.command("set-role")
     @click.argument("username")
     @click.argument("role", type=click.Choice(["user", "admin"]))

@@ -35,6 +35,7 @@ poetry run flask --app hanger_app:create_app schedule-interview 1
 poetry run flask --app hanger_app:create_app add-interview-note 1
 poetry run flask --app hanger_app:create_app research-export
 poetry run flask --app hanger_app:create_app operations-report
+poetry run flask --app hanger_app:create_app retention-cleanup
 poetry run pytest -q
 poetry run ruff check src tests
 ```
@@ -62,6 +63,10 @@ job health, content totals, audit event count, and retention follow-up counts.
 The report intentionally excludes usernames, contact addresses, job payloads,
 recovery tokens, and interview note text.
 
+Admins can also read the same sanitized report from
+`GET /admin/operations-report`. The route requires an authenticated admin
+session and returns JSON.
+
 ## Backup, restore, and retention
 
 Back up SQLite with the database online using SQLite's backup command:
@@ -83,3 +88,17 @@ attachment references stay consistent. Operational retention targets are:
 review closed applications after 90 days, review interview notes after 180 days,
 clear expired password recovery tokens, and clean expired unused invitations.
 Use `operations-report` to identify records that need review before deletion.
+Use `retention-cleanup` as a safe dry-run and add `--apply` only when the output
+matches the intended cleanup:
+
+```bash
+poetry run flask --app hanger_app:create_app retention-cleanup
+poetry run flask --app hanger_app:create_app retention-cleanup --apply
+```
+
+For a single-host deployment, schedule backups outside the application process.
+Example cron entry:
+
+```cron
+15 3 * * * cd /srv/hanger && sqlite3 "$HANGER_DB_PATH" ".backup 'backups/hanger-$(date +\%Y\%m\%d).sqlite3'" && rsync -a "$HANGER_UPLOAD_DIR/" backups/uploads/
+```

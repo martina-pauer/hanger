@@ -134,6 +134,7 @@ class AuthService:
             "login succeeded",
             extra={"event": "auth.login.succeeded", "role": found.role},
         )
+        self.users.record_login(found.username, int(time.time()))
         return found
 
     def request_password_recovery(self, username: str, client_key: str) -> None:
@@ -411,6 +412,27 @@ class OperationalReportService:
 
     def summary(self) -> dict:
         return self.reports.summary()
+
+    def cleanup_retention(
+        self,
+        apply: bool = False,
+        closed_application_days: int = 90,
+        interview_note_days: int = 180,
+    ) -> dict:
+        if closed_application_days < 1:
+            raise ValueError("closed_application_days must be positive")
+        if interview_note_days < 1:
+            raise ValueError("interview_note_days must be positive")
+        result = self.reports.cleanup_retention(
+            apply=apply,
+            closed_application_days=closed_application_days,
+            interview_note_days=interview_note_days,
+        )
+        logger.info(
+            "retention cleanup evaluated",
+            extra={"event": "retention.cleanup", "mode": result["mode"]},
+        )
+        return result
 
 
 class InstallationSettingsService:

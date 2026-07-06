@@ -121,7 +121,14 @@ Acceptance criteria:
 
 ## Next Technical Work
 
-- Add actual retention cleanup commands with dry-run support.
-- Add scheduled backup automation examples for the target hosting environment.
-- Add an admin UI for operational reports if maintainers need browser access.
-- Add richer activity metrics once the schema tracks successful login timestamps.
+- [x] Add actual retention cleanup commands with dry-run support.
+- [x] Add scheduled backup automation examples for the target hosting
+  environment.
+- [x] Add an admin endpoint for operational reports if maintainers need browser
+  access.
+- [x] Add richer activity metrics using `last_login_at` tracking.
+
+## Closed Roadmap Status
+
+The planned roadmap is complete. Future work should be tracked as new roadmap
+items instead of extending this document.

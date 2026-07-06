@@ -56,6 +56,7 @@ def test_registration_login_and_health(app, client, csrf):
     )
     assert registration.status_code == 302
     assert login(client, csrf, "alice")
+    assert app.extensions["hanger"]["users"].get("alice").last_login_at is not None
     assert client.get("/health/live").status_code == 200
     assert client.get("/health/ready").status_code == 200
 
@@ -222,6 +223,24 @@ def test_admin_role_is_required_and_audited(app, client, csrf):
     with app.extensions["hanger"]["database"].transaction() as connection:
         audit = connection.execute("SELECT action FROM audit_log").fetchone()
     assert audit["action"] == "invitation.create"
+
+
+def test_admin_operations_report_route_is_protected(app, client, csrf):
+    create_user(app, "alice")
+    create_user(app, "admin", role="admin")
+
+    csrf = login(client, csrf, "alice")
+    denied = client.get("/admin/operations-report")
+    assert denied.status_code == 403
+
+    csrf = login(client, csrf, "admin")
+    report = client.get("/admin/operations-report")
+
+    assert report.status_code == 200
+    payload = report.get_json()
+    assert payload["health"]["ready"]
+    assert payload["users"]["registered"] == 2
+    assert payload["users"]["active_30d"] == 2
 
 
 def test_admin_can_schedule_interview_and_assigned_interviewer_reads_notes(
