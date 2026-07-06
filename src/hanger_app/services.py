@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 import secrets
@@ -14,10 +15,13 @@ from .repositories import (
     InstallationSettingsRepository,
     InvitationRepository,
     JobRepository,
+    OperationalReportRepository,
     RateLimitRepository,
     UserRepository,
 )
 from .security import hash_password, hash_token, valid_password, verify_password
+
+logger = logging.getLogger(__name__)
 
 
 class RateLimitExceeded(Exception):
@@ -90,20 +94,47 @@ class AuthService:
                 int(time.time()),
             )
             if created is None:
+                logger.info(
+                    "registration rejected",
+                    extra={"event": "auth.register.rejected", "reason": "invitation"},
+                )
                 raise ValueError("Invalid or expired invitation token")
+            logger.info(
+                "user registered with invitation",
+                extra={"event": "auth.register.invited", "role": role},
+            )
             return created
-        return self.users.create(
+        created = self.users.create(
             username, password_hash, age, kind, address, role
         )
+        if created:
+            logger.info(
+                "user registered",
+                extra={"event": "auth.register.created", "role": role},
+            )
+        return created
 
     def login(self, username: str, password: str, client_key: str) -> Optional[User]:
         normalized = username.strip()
         key = f"login:{client_key}:{normalized.lower()}"
         if not self.rate_limits.allow(key, limit=10, window_seconds=300):
+            logger.info(
+                "login rate limited",
+                extra={"event": "auth.login.rate_limited"},
+            )
             raise RateLimitExceeded("Too many login attempts")
         found = self.users.get(normalized)
         if found is None or not verify_password(password, found.password_hash):
+            logger.info(
+                "login failed",
+                extra={"event": "auth.login.failed"},
+            )
             return None
+        logger.info(
+            "login succeeded",
+            extra={"event": "auth.login.succeeded", "role": found.role},
+        )
+        self.users.record_login(found.username, int(time.time()))
         return found
 
     def request_password_recovery(self, username: str, client_key: str) -> None:
@@ -315,6 +346,10 @@ class ApplicationService:
             self.audit.record(
                 reviewer_username, "application.interview.schedule", str(application_id)
             )
+            logger.info(
+                "interview scheduled",
+                extra={"event": "application.interview.schedule"},
+            )
         return updated
 
     def complete_interview(self, application_id: int, actor_username: str) -> bool:
@@ -324,6 +359,10 @@ class ApplicationService:
         if updated:
             self.audit.record(
                 actor_username, "application.interview.complete", str(application_id)
+            )
+            logger.info(
+                "interview completed",
+                extra={"event": "application.interview.complete"},
             )
         return updated
 
@@ -350,6 +389,10 @@ class ApplicationService:
         self.audit.record(
             author_username, "application.interview.note.create", str(application_id)
         )
+        logger.info(
+            "interview note created",
+            extra={"event": "application.interview.note.create", "category": category},
+        )
         return note
 
     def list_interview_notes(
@@ -361,6 +404,35 @@ class ApplicationService:
 
     def research_metrics(self) -> dict:
         return self.applications.research_metrics()
+
+
+class OperationalReportService:
+    def __init__(self, reports: OperationalReportRepository):
+        self.reports = reports
+
+    def summary(self) -> dict:
+        return self.reports.summary()
+
+    def cleanup_retention(
+        self,
+        apply: bool = False,
+        closed_application_days: int = 90,
+        interview_note_days: int = 180,
+    ) -> dict:
+        if closed_application_days < 1:
+            raise ValueError("closed_application_days must be positive")
+        if interview_note_days < 1:
+            raise ValueError("interview_note_days must be positive")
+        result = self.reports.cleanup_retention(
+            apply=apply,
+            closed_application_days=closed_application_days,
+            interview_note_days=interview_note_days,
+        )
+        logger.info(
+            "retention cleanup evaluated",
+            extra={"event": "retention.cleanup", "mode": result["mode"]},
+        )
+        return result
 
 
 class InstallationSettingsService:
@@ -502,5 +574,15 @@ class JobWorker:
                 raise ValueError(f"Unknown job kind: {job.kind}")
         except Exception as error:
             self.jobs.fail(job, str(error))
+            logger.warning(
+                "job failed",
+                extra={"event": "jobs.failed", "kind": job.kind},
+            )
             return False
-        return self.jobs.complete(job)
+        completed = self.jobs.complete(job)
+        if completed:
+            logger.info(
+                "job completed",
+                extra={"event": "jobs.completed", "kind": job.kind},
+            )
+        return completed
