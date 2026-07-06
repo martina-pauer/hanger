@@ -1,3 +1,4 @@
+import json
 import sqlite3
 from pathlib import Path
 
@@ -89,6 +90,65 @@ def test_operational_cli_commands(app):
     assert app.extensions["hanger"]["users"].get("operator").role == "user"
     assert runner.invoke(args=["db-upgrade"]).exit_code == 0
     assert runner.invoke(args=["process-jobs", "--limit", "1"]).exit_code == 0
+
+
+def test_operations_report_is_sanitized_and_counts_operational_health(app):
+    services = app.extensions["hanger"]
+    assert services["auth"].register("admin", "SecureAdmin1!", role="admin")
+    assert services["auth"].register(
+        "alice", "SecureUser1!", 30, "email", "alice@example.com"
+    )
+    application, created = services["applications"].submit(
+        "candidate",
+        "candidate@example.com",
+        "email",
+        {"private_answer": "sensitive answer"},
+    )
+    assert created
+    assert application is not None
+    assert services["applications"].accept(application.id, "admin", "private reviewer")
+    assert services["applications"].invite(
+        application.id, "admin", "http://test.local/register"
+    )
+    services["applications"].add_interview_note(
+        application.id,
+        "admin",
+        "fit",
+        "private interview note",
+    )
+    with services["database"].transaction() as connection:
+        connection.execute(
+            """
+            UPDATE jobs
+            SET status = 'failed', attempts = 5, last_error = 'private provider error'
+            """
+        )
+        connection.execute(
+            """
+            UPDATE users
+            SET recovery_token_hash = 'secret-token', recovery_expires = 1
+            WHERE username = 'alice'
+            """
+        )
+
+    runner = app.test_cli_runner()
+    result = runner.invoke(args=["operations-report"])
+
+    assert result.exit_code == 0
+    report = json.loads(result.output)
+    assert report["users"]["registered"] == 2
+    assert report["users"]["admins"] == 1
+    assert report["applications"]["by_status"]["invited"] == 1
+    assert report["invitations"]["total"] == 1
+    assert report["jobs"]["failed"] == 1
+    assert report["jobs"]["exhausted"] == 1
+    assert report["retention"]["expired_recovery_tokens"] == 1
+    serialized = json.dumps(report)
+    assert "alice" not in serialized
+    assert "candidate@example.com" not in serialized
+    assert "private interview note" not in serialized
+    assert "secret-token" not in serialized
+    assert "private provider error" not in serialized
 
 
 def test_installation_settings_defaults_and_cli(app):
