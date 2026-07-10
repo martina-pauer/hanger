@@ -50,6 +50,7 @@ class User:
     contact_kind: Optional[str]
     contact_address: Optional[str]
     role: str
+    last_login_at: Optional[int]
 
 
 @dataclass(frozen=True)

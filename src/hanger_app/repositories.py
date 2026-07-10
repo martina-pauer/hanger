@@ -107,12 +107,19 @@ class UserRepository:
             row = connection.execute(
                 """
                 SELECT id, username, password_hash, age, contact_kind,
-                       contact_address, role
+                       contact_address, role, last_login_at
                 FROM users WHERE username = ?
                 """,
                 (username,),
             ).fetchone()
         return User(**dict(row)) if row else None
+
+    def record_login(self, username: str, now: int) -> None:
+        with self.database.transaction() as connection:
+            connection.execute(
+                "UPDATE users SET last_login_at = ? WHERE username = ?",
+                (now, username),
+            )
 
     def queue_recovery(
         self,
@@ -640,6 +647,292 @@ class InstallationSettingsRepository:
         if setting is None:
             raise RuntimeError("Installation setting was not persisted")
         return setting
+
+
+class OperationalReportRepository:
+    def __init__(self, database: Database):
+        self.database = database
+
+    @staticmethod
+    def _counts(rows: list[sqlite3.Row], key: str = "status") -> dict[str, int]:
+        return {row[key]: row["total"] for row in rows}
+
+    def summary(self, now: Optional[int] = None) -> dict:
+        timestamp = int(time.time()) if now is None else now
+        active_cutoff = timestamp - 30 * 24 * 60 * 60
+        old_application_cutoff = timestamp - 90 * 24 * 60 * 60
+        old_note_cutoff = timestamp - 180 * 24 * 60 * 60
+        with self.database.transaction() as connection:
+            users = connection.execute(
+                """
+                SELECT
+                    COUNT(*) AS registered,
+                    SUM(CASE WHEN role = 'admin' THEN 1 ELSE 0 END) AS admins
+                FROM users
+                """
+            ).fetchone()
+            active_users = connection.execute(
+                """
+                SELECT COUNT(*) AS total
+                FROM users
+                WHERE last_login_at >= ?
+                """,
+                (active_cutoff,),
+            ).fetchone()
+            application_statuses = connection.execute(
+                """
+                SELECT status, COUNT(*) AS total
+                FROM applications
+                GROUP BY status
+                """
+            ).fetchall()
+            interview_statuses = connection.execute(
+                """
+                SELECT interview_status AS status, COUNT(*) AS total
+                FROM applications
+                GROUP BY interview_status
+                """
+            ).fetchall()
+            invitations = connection.execute(
+                """
+                SELECT
+                    COUNT(*) AS total,
+                    SUM(CASE WHEN status = 'sent' THEN 1 ELSE 0 END) AS sent,
+                    SUM(CASE WHEN status = 'used' THEN 1 ELSE 0 END) AS used,
+                    SUM(
+                        CASE
+                            WHEN used_at IS NULL
+                                AND expires_at IS NOT NULL
+                                AND expires_at < ?
+                            THEN 1 ELSE 0
+                        END
+                    ) AS expired_unused
+                FROM invitations
+                """,
+                (timestamp,),
+            ).fetchone()
+            jobs_by_status = connection.execute(
+                """
+                SELECT status, COUNT(*) AS total
+                FROM jobs
+                GROUP BY status
+                """
+            ).fetchall()
+            job_health = connection.execute(
+                """
+                SELECT
+                    SUM(
+                        CASE
+                            WHEN status IN ('pending', 'failed')
+                                AND available_at <= ?
+                            THEN 1 ELSE 0
+                        END
+                    ) AS ready,
+                    SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) AS failed,
+                    SUM(
+                        CASE
+                            WHEN status = 'running' AND locked_at <= ?
+                            THEN 1 ELSE 0
+                        END
+                    ) AS stale_running,
+                    SUM(CASE WHEN attempts >= 5 THEN 1 ELSE 0 END) AS exhausted
+                FROM jobs
+                """,
+                (timestamp, timestamp - 300),
+            ).fetchone()
+            content = connection.execute(
+                """
+                SELECT
+                    (SELECT COUNT(*) FROM messages) AS messages,
+                    (SELECT COUNT(*) FROM attachments) AS attachments,
+                    (SELECT COUNT(*) FROM posts) AS posts,
+                    (SELECT COUNT(*) FROM comments) AS comments,
+                    (SELECT COUNT(*) FROM post_likes) AS post_likes
+                """
+            ).fetchone()
+            retention = connection.execute(
+                """
+                SELECT
+                    (
+                        SELECT COUNT(*)
+                        FROM applications
+                        WHERE status IN ('rejected', 'invited')
+                            AND updated_at < ?
+                    ) AS old_closed_applications,
+                    (
+                        SELECT COUNT(*)
+                        FROM interview_notes
+                        WHERE created_at < ?
+                    ) AS old_interview_notes,
+                    (
+                        SELECT COUNT(*)
+                        FROM users
+                        WHERE recovery_token_hash IS NOT NULL
+                            AND recovery_expires < ?
+                    ) AS expired_recovery_tokens,
+                    (
+                        SELECT COUNT(*)
+                        FROM invitations
+                        WHERE used_at IS NULL
+                            AND expires_at IS NOT NULL
+                            AND expires_at < ?
+                    ) AS expired_unused_invitations
+                """
+                ,
+                (
+                    old_application_cutoff,
+                    old_note_cutoff,
+                    timestamp,
+                    timestamp,
+                ),
+            ).fetchone()
+            audit_events = connection.execute(
+                "SELECT COUNT(*) AS total FROM audit_log"
+            ).fetchone()
+
+        total_invitations = invitations["total"] or 0
+        used_invitations = invitations["used"] or 0
+        conversion_rate = (
+            round(used_invitations / total_invitations, 4)
+            if total_invitations
+            else 0
+        )
+        return {
+            "generated_at": timestamp,
+            "health": {
+                "live": "ok",
+                "ready": True,
+            },
+            "users": {
+                "registered": users["registered"] or 0,
+                "admins": users["admins"] or 0,
+                "active_30d": active_users["total"] or 0,
+            },
+            "applications": {
+                "by_status": self._counts(application_statuses),
+                "interviews_by_status": self._counts(interview_statuses),
+            },
+            "invitations": {
+                "total": total_invitations,
+                "sent": invitations["sent"] or 0,
+                "used": used_invitations,
+                "expired_unused": invitations["expired_unused"] or 0,
+                "conversion_rate": conversion_rate,
+            },
+            "jobs": {
+                "by_status": self._counts(jobs_by_status),
+                "ready": job_health["ready"] or 0,
+                "failed": job_health["failed"] or 0,
+                "stale_running": job_health["stale_running"] or 0,
+                "exhausted": job_health["exhausted"] or 0,
+            },
+            "content": {
+                "messages": content["messages"] or 0,
+                "attachments": content["attachments"] or 0,
+                "posts": content["posts"] or 0,
+                "comments": content["comments"] or 0,
+                "post_likes": content["post_likes"] or 0,
+            },
+            "retention": {
+                "old_closed_applications": retention["old_closed_applications"] or 0,
+                "old_interview_notes": retention["old_interview_notes"] or 0,
+                "expired_recovery_tokens": retention["expired_recovery_tokens"] or 0,
+                "expired_unused_invitations": (
+                    retention["expired_unused_invitations"] or 0
+                ),
+            },
+            "audit_events": audit_events["total"] or 0,
+        }
+
+    def cleanup_retention(
+        self,
+        apply: bool = False,
+        now: Optional[int] = None,
+        closed_application_days: int = 90,
+        interview_note_days: int = 180,
+    ) -> dict:
+        timestamp = int(time.time()) if now is None else now
+        old_application_cutoff = timestamp - closed_application_days * 24 * 60 * 60
+        old_note_cutoff = timestamp - interview_note_days * 24 * 60 * 60
+        with self.database.transaction(immediate=apply) as connection:
+            counts = {
+                "old_closed_applications": connection.execute(
+                    """
+                    SELECT COUNT(*) AS total
+                    FROM applications
+                    WHERE status IN ('rejected', 'invited')
+                        AND updated_at < ?
+                    """,
+                    (old_application_cutoff,),
+                ).fetchone()["total"],
+                "old_interview_notes": connection.execute(
+                    """
+                    SELECT COUNT(*) AS total
+                    FROM interview_notes
+                    WHERE created_at < ?
+                    """,
+                    (old_note_cutoff,),
+                ).fetchone()["total"],
+                "expired_recovery_tokens": connection.execute(
+                    """
+                    SELECT COUNT(*) AS total
+                    FROM users
+                    WHERE recovery_token_hash IS NOT NULL
+                        AND recovery_expires < ?
+                    """,
+                    (timestamp,),
+                ).fetchone()["total"],
+                "expired_unused_invitations": connection.execute(
+                    """
+                    SELECT COUNT(*) AS total
+                    FROM invitations
+                    WHERE used_at IS NULL
+                        AND expires_at IS NOT NULL
+                        AND expires_at < ?
+                    """,
+                    (timestamp,),
+                ).fetchone()["total"],
+            }
+            if apply:
+                connection.execute(
+                    """
+                    DELETE FROM interview_notes
+                    WHERE created_at < ?
+                    """,
+                    (old_note_cutoff,),
+                )
+                connection.execute(
+                    """
+                    DELETE FROM applications
+                    WHERE status IN ('rejected', 'invited')
+                        AND updated_at < ?
+                    """,
+                    (old_application_cutoff,),
+                )
+                connection.execute(
+                    """
+                    UPDATE users
+                    SET recovery_token_hash = NULL, recovery_expires = NULL
+                    WHERE recovery_token_hash IS NOT NULL
+                        AND recovery_expires < ?
+                    """,
+                    (timestamp,),
+                )
+                connection.execute(
+                    """
+                    DELETE FROM invitations
+                    WHERE used_at IS NULL
+                        AND expires_at IS NOT NULL
+                        AND expires_at < ?
+                    """,
+                    (timestamp,),
+                )
+        return {
+            "mode": "apply" if apply else "dry-run",
+            "closed_application_days": closed_application_days,
+            "interview_note_days": interview_note_days,
+            "counts": counts,
+        }
 
 
 class InvitationRepository:

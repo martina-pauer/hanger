@@ -17,6 +17,7 @@ from .repositories import (
     InvitationRepository,
     JobRepository,
     MessageRepository,
+    OperationalReportRepository,
     PostRepository,
     RateLimitRepository,
     UserRepository,
@@ -29,6 +30,7 @@ from .services import (
     InstallationSettingsService,
     InvitationService,
     JobWorker,
+    OperationalReportService,
 )
 from .uploads import UploadService
 
@@ -49,6 +51,7 @@ def create_app(test_config: Optional[dict] = None) -> Flask:
     users = UserRepository(database)
     rate_limits = RateLimitRepository(database)
     jobs = JobRepository(database)
+    operational_report_repository = OperationalReportRepository(database)
     application_repository = ApplicationRepository(database)
     installation_settings_repository = InstallationSettingsRepository(database)
     invitation_repository = InvitationRepository(database)
@@ -57,6 +60,7 @@ def create_app(test_config: Optional[dict] = None) -> Flask:
     audit = AuditRepository(database)
     invitations = InvitationService(invitation_repository, jobs)
     applications = ApplicationService(application_repository, invitations, audit)
+    operational_reports = OperationalReportService(operational_report_repository)
     installation_settings = InstallationSettingsService(
         installation_settings_repository
     )
@@ -75,6 +79,8 @@ def create_app(test_config: Optional[dict] = None) -> Flask:
         "users": users,
         "rate_limits": rate_limits,
         "jobs": jobs,
+        "operational_reports": operational_reports,
+        "operational_report_repository": operational_report_repository,
         "auth": auth,
         "audit": audit,
         "applications": applications,
@@ -328,6 +334,34 @@ def create_app(test_config: Optional[dict] = None) -> Flask:
     @app.cli.command("research-export")
     def research_export() -> None:
         click.echo(json_dumps(applications.research_metrics()))
+
+    @app.cli.command("operations-report")
+    def operations_report() -> None:
+        click.echo(json_dumps(operational_reports.summary()))
+
+    @app.cli.command("retention-cleanup")
+    @click.option(
+        "--apply",
+        "apply_changes",
+        is_flag=True,
+        help="Delete or clear expired records. Defaults to dry-run.",
+    )
+    @click.option("--closed-application-days", default=90, type=int, show_default=True)
+    @click.option("--interview-note-days", default=180, type=int, show_default=True)
+    def retention_cleanup(
+        apply_changes: bool,
+        closed_application_days: int,
+        interview_note_days: int,
+    ) -> None:
+        try:
+            result = operational_reports.cleanup_retention(
+                apply=apply_changes,
+                closed_application_days=closed_application_days,
+                interview_note_days=interview_note_days,
+            )
+        except ValueError as error:
+            raise click.ClickException(str(error)) from error
+        click.echo(json_dumps(result))
 
     @app.cli.command("set-role")
     @click.argument("username")

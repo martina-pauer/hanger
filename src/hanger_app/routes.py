@@ -194,6 +194,12 @@ def admin_applications():
     return jsonify({"applications": [_application_json(item) for item in applications]})
 
 
+@bp.get("/admin/operations-report")
+def admin_operations_report():
+    _require_admin()
+    return jsonify(_services()["operational_reports"].summary())
+
+
 @bp.post("/admin/applications/<int:application_id>/interview")
 def admin_schedule_interview(application_id: int):
     admin = _require_admin()
