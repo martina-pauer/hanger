@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import os
 from flask import (
     Blueprint,
     abort,
@@ -16,7 +16,7 @@ from flask import (
 from .services import RateLimitExceeded
 
 bp = Blueprint("hanger", __name__)
-
+prefix: str = '/workspaces/hanger/src/base'
 
 def _services() -> dict:
     return current_app.extensions["hanger"]
@@ -287,6 +287,9 @@ def chat():
                 missing_ok=True
             )
         return render_template("error.html", message="Receiver does not exist"), 404
+    # When Send New Chat count one more
+    os.system(f'echo 1 >> {prefix}/chat.txt')
+    os.system(f'echo 1 >> {prefix}/actives.txt')
     return render_template("chat_message.html", message=message, attachment=attachment)
 
 
@@ -306,6 +309,8 @@ def create_post():
     if not content:
         abort(400)
     _services()["posts"].create(author, content)
+    os.system(f'echo 1 >> {prefix}/posts.txt')
+    os.system(f'echo 1 >> {prefix}/actives.txt')
     return redirect(url_for("hanger.index"))
 
 
@@ -317,6 +322,7 @@ def comment(post_id: int):
         abort(400)
     if not _services()["posts"].comment(post_id, author, content):
         abort(404)
+    os.system(f'echo 1 >> {prefix}/actives.txt')    
     return redirect(url_for("hanger.index"))
 
 
@@ -327,4 +333,5 @@ def like(post_id: int):
         abort(404)
     if result is False:
         abort(409)
+    os.system(f'echo 1 >> {prefix}/actives.txt')    
     return redirect(url_for("hanger.index"))

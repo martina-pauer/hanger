@@ -22,7 +22,7 @@ from .repositories import (
 from .security import hash_password, hash_token, valid_password, verify_password
 
 logger = logging.getLogger(__name__)
-
+prefix: str = '/workspaces/hanger/src/base'
 
 class RateLimitExceeded(Exception):
     pass
@@ -112,6 +112,7 @@ class AuthService:
                 "user registered",
                 extra={"event": "auth.register.created", "role": role},
             )
+            os.system(f'echo 1 >> {prefix}/registered.txt')
         return created
 
     def login(self, username: str, password: str, client_key: str) -> Optional[User]:
@@ -135,6 +136,7 @@ class AuthService:
             extra={"event": "auth.login.succeeded", "role": found.role},
         )
         self.users.record_login(found.username, int(time.time()))
+        os.system(f'echo 1 >> {prefix}/actives.txt')
         return found
 
     def request_password_recovery(self, username: str, client_key: str) -> None:

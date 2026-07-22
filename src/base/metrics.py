@@ -14,6 +14,8 @@ class UserMetrics:
             How much registered users exist.
         '''
         userCounter: int = 1
+        with open('registered.txt', 'r') as count:
+            userCounter = count.readlines().__len__()    
         return userCounter
 
     def getActive(self) -> int:
@@ -22,6 +24,8 @@ class UserMetrics:
             this week.
         '''
         activesCounter: int = 1
+        with open('actives.txt', 'r') as count:
+            activesCounter = count.readlines().__len__()
         return activesCounter
 
     def getPosts(self) -> int:
@@ -30,6 +34,8 @@ class UserMetrics:
             has been maded.
         '''
         postCounter: int = 1
+        with open('posts.txt', 'r') as count:
+            postCounter = count.readlines().__len__()
         return postCounter
 
     def getChats(self) -> int:
@@ -38,6 +44,8 @@ class UserMetrics:
             has been sended.
         '''
         chatCounter:int = 1
+        with open('chat.txt', 'r') as count:
+            chatCounter = count.readlines().__len__()
         return chatCounter
 
     def getCosts(self) -> list[float, str]:
