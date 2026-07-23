@@ -84,10 +84,10 @@ class UserMetrics:
             document.write('\n<!DOCTYPE html>\n\t<head>\n\t\t')
             # Define title and infography visual style
             document.write(f'<title>{infography_name}</title>\n\t\t<style>')
-            document.write('#registered, #actives, .advice { border: 1px solid #000000; width: 14em; height: 3em; }')
-            document.write('#registered { margin-rigth: 0em; } #actives { margin-right: 17em; } #registered, #actives { border-radius: 1em } ')
+            document.write('#registered, #actives, .advice { border: 1px solid #000000; width: 14em; height: 3em; font-family: "sans"; }')
+            document.write('#registered { margin-left: 0em; } #actives { margin-left: 9em; } #registered, #actives { border-radius: 1em; padding: 1em; background-color: #ddf700; } ')
             document.write(f'</style>\n\t<body>\n\t\t<div id = "data"><div id = "registered"><p>{self.getUsers()} New Users</p>\n\t\t')
             # Load Data
             document.write(f'<span class = "advice">More Users Maintain Strategy.</span></div><div id = "actives">')
-            document.write(f'<p id = "actives">{self.getActive()} Active Users</p><span class = "advice">More Actives Refresh Strategy.</span></div></div>\n\t</body>\n</html>')
+            document.write(f'<p id = "actives-num">{self.getActive()} Active Users</p><span class = "advice">More Actives Refresh Strategy.</span></div></div>\n\t</body>\n</html>')
             document.close()
